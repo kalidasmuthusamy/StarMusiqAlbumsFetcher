@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import Button from './components/Button.jsx';
 import AlbumCard from './components/AlbumCard.jsx';
 import Spinner from './components/Spinner.jsx';
+import ErrorAlert from './components/ErrorAlert.jsx';
 
 class App extends Component {
   constructor(props){
     super(props);
 
     this.starMusiqAlbumsRetriever = window.starMusiqAlbumsRetriever;
+    this.loadingErrorMessage = 'Error! Please Try Again'
     this.state = {
       albums: [],
       currentPageNumber: 1,
       loading: false,
+      loadingError: false,
     };
   }
 
@@ -24,13 +27,18 @@ class App extends Component {
       loading: true,
     });
 
-    const { albums } = await this.fetchAlbums(pageNumber);
-    
-    this.setState({
-      albums,
-      currentPageNumber: pageNumber,
-      loading: false,
-    });
+    try{
+      const { albums } = await this.fetchAlbums(pageNumber);
+      this.setState({
+        albums,
+        currentPageNumber: pageNumber,
+        loading: false,
+      });
+    } catch(e){
+        this.setState((prevState) => {
+          return { loadingError: !prevState.loadingError, }
+        });
+    }
   }
 
   componentDidMount = () => {
@@ -38,15 +46,15 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className='container-fluid'>
-        { this.state.loading && <Spinner /> }
-        <div className="row">
+    const albumsDOMContent = (
+      <div className='main-wrapper'>
+        {this.state.loading && <Spinner />}
+        <div className='row albums-card-container'>
           {
             !this.state.loading && this.state.albums.map((album) => {
               return (
-                <div key={album.movieId} className="col-sm-4">
-                  <AlbumCard 
+                <div key={album.movieId} className='col-sm-4 albums-card'>
+                  <AlbumCard
                     album={album}
                   />
                 </div>
@@ -54,20 +62,36 @@ class App extends Component {
             })
           }
         </div>
-        <div className='row'>
-          <Button
-            className={'btn-primary waves-effect'}
-            onClick={() => (this.displayAlbumsOfPage(this.state.currentPageNumber - 1))}
-            value='Prev'
-            disabled={this.state.loading}
-            />
+        <div className='row justify-content-center'>
+          <div className='col-6'>
             <Button
-            className={'btn-primary waves-effect'}
-            onClick={() => (this.displayAlbumsOfPage(this.state.currentPageNumber + 1))}
-            value='Next' 
-            disabled={this.state.loading}
-          />
+              className={'btn-primary waves-effect float-right'}
+              onClick={() => (this.displayAlbumsOfPage(this.state.currentPageNumber - 1))}
+              value='Prev'
+              disabled={this.state.loading || (this.state.currentPageNumber == 1)}
+            />
+          </div>
+          <div className='col-6'>
+            <Button
+              className={'btn-primary waves-effect float-left'}
+              onClick={() => (this.displayAlbumsOfPage(this.state.currentPageNumber + 1))}
+              value='Next'
+              disabled={this.state.loading}
+            />
+          </div>
         </div>
+      </div>
+    );
+
+    return (
+      <div className='container-fluid'>
+        { this.state.loadingError ?
+            (
+              <ErrorAlert
+                message={this.loadingErrorMessage}
+              />
+            ) : albumsDOMContent
+        }
       </div>
     );
   }
