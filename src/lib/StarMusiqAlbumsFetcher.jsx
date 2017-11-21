@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 class StarMusiqAlbumsFetcher {
   constructor(){
     this.siteConfig = {
@@ -32,7 +34,7 @@ class StarMusiqAlbumsFetcher {
 
     const $albumsTable = $(responseText).find('.main_tb3');
 
-    $albumsTable.each(function (index, albumBlock) {
+    $albumsTable.each((index, albumBlock) => {
       const $album = $(albumBlock);
       const albumLink = $album.find('a').eq(1);
       const albumInfo = albumLink.text().split(' - ');
@@ -54,7 +56,7 @@ class StarMusiqAlbumsFetcher {
       }
 
       this.albums.push(albumObj);
-    }.bind(this));
+    });
   }
   
   // Fetch response through ajax
