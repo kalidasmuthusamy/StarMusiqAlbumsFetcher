@@ -3,12 +3,13 @@ import Button from './components/Button.jsx';
 import AlbumCard from './components/AlbumCard.jsx';
 import Spinner from './components/Spinner.jsx';
 import ErrorAlert from './components/ErrorAlert.jsx';
+import StarMusiqAlbumsFetcher from './lib/StarMusiqAlbumsFetcher.jsx';
 
 class App extends Component {
   constructor(props){
     super(props);
 
-    this.starMusiqAlbumsRetriever = window.starMusiqAlbumsRetriever;
+    this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.loadingErrorMessage = 'Error! Please Try Again'
     this.state = {
       albums: [],
@@ -96,4 +97,5 @@ class App extends Component {
     );
   }
 }
+
 export default App;
