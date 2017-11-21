@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// Modal-Content will be coming soon
 const ErrorModal = ({
   message,
   ...restProps,
