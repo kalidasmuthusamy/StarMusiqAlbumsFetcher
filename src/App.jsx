@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Button from './components/Button.jsx';
 import AlbumCard from './components/AlbumCard.jsx';
 import Spinner from './components/Spinner.jsx';
-import ErrorAlert from './components/ErrorAlert.jsx';
+import ErrorModal from './components/ErrorModal.jsx';
 import StarMusiqAlbumsFetcher from './lib/StarMusiqAlbumsFetcher.jsx';
 
 class App extends Component {
@@ -88,7 +88,7 @@ class App extends Component {
       <div className='container-fluid'>
         { this.state.loadingError ?
             (
-              <ErrorAlert
+              <ErrorModal
                 message={this.loadingErrorMessage}
               />
             ) : albumsDOMContent
