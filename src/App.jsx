@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
-import Button from './components/Button.jsx';
-import AlbumCard from './components/AlbumCard.jsx';
-import Spinner from './components/Spinner.jsx';
-import ErrorModal from './components/ErrorModal.jsx';
-import StarMusiqAlbumsFetcher from './lib/StarMusiqAlbumsFetcher.jsx';
+import Button from './components/Buttons/';
+import AlbumCard from './components/AlbumCard/';
+import Spinner from './components/Spinner';
+import ErrorModal from './components/ErrorModal';
+import StarMusiqAlbumsFetcher from './lib/StarMusiqAlbumsFetcher';
 
 class App extends Component {
   constructor(props){
     super(props);
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
-    this.loadingErrorMessage = 'Error! Please Try Again'
+    this.loadingErrorMessage = 'Error! Please Try Again';
+    this.topAlbumsPageLimit = 5;
+
     this.state = {
       albums: [],
       currentPageNumber: 1,
@@ -37,7 +39,10 @@ class App extends Component {
       });
     } catch(e){
         this.setState((prevState) => {
-          return { loadingError: !prevState.loadingError, }
+          return {
+            loadingError: !prevState.loadingError,
+            loading: false,
+          }
         });
     }
   }
@@ -77,7 +82,7 @@ class App extends Component {
               className={'btn-primary waves-effect float-left'}
               onClick={() => (this.displayAlbumsOfPage(this.state.currentPageNumber + 1))}
               value='Next'
-              disabled={this.state.loading}
+              disabled={this.state.loading || (this.state.currentPageNumber === this.topAlbumsPageLimit)}
             />
           </div>
         </div>
