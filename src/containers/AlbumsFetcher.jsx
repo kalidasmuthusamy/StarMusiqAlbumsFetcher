@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/StarMusiqAlbumsFetcher';
 
+import { Shortcuts } from 'react-shortcuts';
+
 class AlbumsFetcher extends Component {
   constructor(props) {
     super(props);
@@ -45,18 +47,34 @@ class AlbumsFetcher extends Component {
     }
   }
 
+  _handleShortcuts = (action, event) => {
+    switch (action) {
+      case 'GO_TO_PREVIOUS_PAGE':
+        console.log('moving left')
+        break
+      case 'GO_TO_NEXT_PAGE':
+        console.log('moving right')
+        break
+    }
+  }
+
   componentDidMount = () => {
     this.displayAlbumsOfPage(this.state.currentPageNumber);
   }
 
   render() {
     return (
-      <AlbumCardsContainer
-        {...this.state}
-        displayAlbumsOfPage={this.displayAlbumsOfPage}
-        topAlbumsPageLimit={this.topAlbumsPageLimit}
-        loadingErrorMessage={this.loadingErrorMessage}
-      />
+      <Shortcuts
+        name='ALBUMS_CONTAINER'
+        handler={this._handleShortcuts}
+      >
+        <AlbumCardsContainer
+          {...this.state}
+          displayAlbumsOfPage={this.displayAlbumsOfPage}
+          topAlbumsPageLimit={this.topAlbumsPageLimit}
+          loadingErrorMessage={this.loadingErrorMessage}
+        />
+      </Shortcuts>
     )
   }
 }
