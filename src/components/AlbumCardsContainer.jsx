@@ -28,6 +28,7 @@ const AlbumCardsContainer = (props) => {
             onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
             value='Prev'
             disabled={props.loading || (props.currentPageNumber == 1)}
+            buttonRef={props.prevButtonRef}
           />
         </div>
         <div className='col-6'>
@@ -36,6 +37,7 @@ const AlbumCardsContainer = (props) => {
             onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
             value='Next'
             disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
+            buttonRef={props.nextButtonRef}
           />
         </div>
       </div>

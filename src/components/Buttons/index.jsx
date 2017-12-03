@@ -6,6 +6,7 @@ const Button = ({
   className,
   disabled,
   value,
+  buttonRef,
   ...restProps,
 }) => (
   <button
@@ -13,22 +14,24 @@ const Button = ({
     onClick={onClick}
     className={`btn ${className}`}
     disabled={disabled}
+    ref={(el) => buttonRef(el)}
   >
     {value}
   </button>
 );
 
-Button.defaultProps = {
-  value: '',
-  onClick: PropTypes.func,
-  className: 'btn'
-};
-
-
 Button.propTypes = {
   value: PropTypes.string,
   onClick: PropTypes.func,
   className: PropTypes.string,
+  buttonRef: PropTypes.func,
+};
+
+Button.defaultProps = {
+  value: '',
+  onClick: () => { },
+  className: 'btn',
+  buttonRef: () => { },
 };
 
 export default Button;

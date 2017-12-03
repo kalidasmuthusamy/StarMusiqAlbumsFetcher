@@ -13,6 +13,9 @@ class AlbumsFetcher extends Component {
     this.loadingErrorMessage = 'Error! Please Try Again';
     this.topAlbumsPageLimit = 5;
 
+    this.prevButtonRef = null;
+    this.nextButtonRef = null;
+
     this.state = {
       albums: [],
       currentPageNumber: 1,
@@ -50,11 +53,13 @@ class AlbumsFetcher extends Component {
   _handleShortcuts = (action, event) => {
     switch (action) {
       case 'GO_TO_PREVIOUS_PAGE':
-        console.log('moving left')
-        break
+        this.prevButtonRef.click();
+        console.log('Navigating to previous page');
+        break;
       case 'GO_TO_NEXT_PAGE':
-        console.log('moving right')
-        break
+        this.nextButtonRef.click();
+        console.log('Navigating to next page');
+        break;
     }
   }
 
@@ -73,6 +78,8 @@ class AlbumsFetcher extends Component {
           displayAlbumsOfPage={this.displayAlbumsOfPage}
           topAlbumsPageLimit={this.topAlbumsPageLimit}
           loadingErrorMessage={this.loadingErrorMessage}
+          prevButtonRef={(el) => this.prevButtonRef = el}
+          nextButtonRef={(el) => this.nextButtonRef = el}
         />
       </Shortcuts>
     )
