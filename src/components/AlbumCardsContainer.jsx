@@ -15,6 +15,10 @@ const AlbumCardsContainer = (props) => {
               <div key={album.movieId} className='col-sm-4 albums-card'>
                 <AlbumCard
                   album={album}
+                  streamButtonRef={props.streamButtonRef}
+                  individualSongsButtonRef={props.individualSongsButtonRef}
+                  normalDownloadButtonRef={props.normalDownloadButtonRef}
+                  hqDownloadButtonRef={props.hqDownloadButtonRef}
                 />
               </div>
             );

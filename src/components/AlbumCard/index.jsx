@@ -14,7 +14,13 @@ import {
   OutlineInfoButtonLink,
 } from '../Buttons/Links/';
 
-const AlbumCard = ({album}) => {
+const AlbumCard = ({
+  album,
+  streamButtonRef,
+  individualSongsButtonRef,
+  normalDownloadButtonRef,
+  hqDownloadButtonRef,
+}) => {
   return (
     <div className='card card-cascade wider reverse my-4'>
       {/* Album Icon */}
@@ -37,6 +43,7 @@ const AlbumCard = ({album}) => {
           {/* Audio Streaming Button Block */}
           <CardListItem>
             <PrimaryButtonLink
+              linkRef={streamButtonRef}
               routeTo={album.streamingUrl}
             >
               Stream
@@ -50,6 +57,7 @@ const AlbumCard = ({album}) => {
           {/* Individual Songs Link Block */}
           <CardListItem>
             <PrimaryButtonLink
+              linkRef={individualSongsButtonRef}
               routeTo={album.movieUrl}
             >
               Individual Songs
@@ -60,10 +68,11 @@ const AlbumCard = ({album}) => {
             </PrimaryButtonLink>
           </CardListItem>
 
-          {/* Direct Downloads BLock */}
+          {/* Direct Downloads Block */}
           <CardListItem>
             {/* Normal Quality */}
             <OutlineInfoButtonLink
+              linkRef={normalDownloadButtonRef}
               routeTo={album.downloadLinkNormal}
             >
               Normal
@@ -75,6 +84,7 @@ const AlbumCard = ({album}) => {
 
             {/* High Quality */}
             <OutlinePrimaryButtonLink
+              linkRef={hqDownloadButtonRef}
               routeTo={album.downloadLinkHq}
             >
               HQ
