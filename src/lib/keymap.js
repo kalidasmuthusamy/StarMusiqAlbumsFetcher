@@ -11,8 +11,8 @@ const albumCardsShortCuts = (keyCode = '', albumsCount) => (
 
 const albumContainerShortcuts = {
   ALBUMS_CONTAINER: {
-    GO_TO_PREVIOUS_PAGE: 'ctrl+left',
-    GO_TO_NEXT_PAGE: ['ctrl+right'],
+    GO_TO_PREVIOUS_PAGE: ['ctrl+left', 'P', 'p'],
+    GO_TO_NEXT_PAGE: ['ctrl+right', 'N', 'n'],
     CLICK_ALBUM_STREAM_LINK: albumCardsShortCuts('shift', 10),
     CLICK_ALBUM_IS_LINK: albumCardsShortCuts('ctrl', 10),
     CLICK_ALBUM_ND_LINK: albumCardsShortCuts('meta', 10),
