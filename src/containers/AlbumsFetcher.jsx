@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
-import StarMusiqAlbumsFetcher from '../lib/StarMusiqAlbumsFetcher';
+import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 
 import { Shortcuts } from 'react-shortcuts';
 
