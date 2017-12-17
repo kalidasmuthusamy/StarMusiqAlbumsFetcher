@@ -1,3 +1,3 @@
 # ToDo
 
-Tweak for `Allow Access Control Origin`
+Auto Download using Service Worker and IndexedDB
