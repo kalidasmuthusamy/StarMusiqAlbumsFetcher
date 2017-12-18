@@ -1,11 +1,13 @@
 var path = require('path');
 var webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
+
 
 module.exports = {
   devtool: 'source-map',
   entry: [
     'babel-polyfill',
-    'webpack-dev-server/client?http://localhost:3000',
+    // 'webpack-dev-server/client?http://localhost:3000',
     './src/index.jsx'
   ],
   output: {
@@ -28,5 +30,20 @@ module.exports = {
         loaders: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({ // <-- key to reducing React's size
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin(),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
+  ]
 }
