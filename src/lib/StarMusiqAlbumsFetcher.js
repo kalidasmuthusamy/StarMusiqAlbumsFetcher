@@ -31,7 +31,7 @@ class StarMusiqAlbumsFetcher {
   }
 
   buildAlbumObjects(responseText) {
-    // Making albums object empty for every page visit
+    /*  Making albums object empty for every page visit */
     this.albums = [];
 
     const $albumsTable = $(responseText).find('#featured_albums').find('.row');
