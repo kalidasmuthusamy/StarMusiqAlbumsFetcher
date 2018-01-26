@@ -114,6 +114,7 @@ class AlbumsFetcher extends Component {
       <Shortcuts 
         name="ALBUMS_CONTAINER"
         handler={this._handleShortcuts}
+        targetNodeSelector={'body'}
       >
         <AlbumCardsContainer
           {...this.state}
