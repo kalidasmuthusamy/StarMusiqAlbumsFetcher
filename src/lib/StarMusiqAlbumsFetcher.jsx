@@ -3,9 +3,10 @@ import $ from 'jquery';
 class StarMusiqAlbumsFetcher {
   constructor(){
     this.siteConfig = {
-      downloadBaseUrl: 'http://www.starfile.info/download-7s-zip-new/download-3.ashx?Token=',
-      landingUrl: 'http://www.5starmusiq.com/topten-proc.asp?pgno=',
-      streamBaseUrl: 'http://5starmusiq.com/audio-player-popup.asp?MovieID='
+      albumBaseUrl: 'https://www.5starmusiq.com',
+      downloadBaseUrl: 'https://www.starfile.info/download-7s-zip-new/download-3.ashx?Token=',
+      landingUrl: 'https://www.5starmusiq.com/topten-proc.asp?pgno=',
+      streamBaseUrl: 'https://5starmusiq.com/audio-player-popup.asp?MovieID='
     };
     this.albums = [];
   }
@@ -48,8 +49,8 @@ class StarMusiqAlbumsFetcher {
         musicDirector: (albumInfo[1]),
         casts: (starrer),
         movieId: movieId,
-        movieUrl: (albumLink.attr('href').replace('.', 'http://www.5starmusiq.com')),
-        movieIcon: (movieIconUrl.replace('.', 'http://www.5starmusiq.com')),
+        movieUrl: (albumLink.attr('href').replace('.', this.siteConfig.albumBaseUrl)),
+        movieIcon: (movieIconUrl.replace('.', this.siteConfig.albumBaseUrl)),
         streamingUrl: (this.siteConfig.streamBaseUrl + movieId),
         downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
         downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
