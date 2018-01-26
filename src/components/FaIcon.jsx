@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 const FaIcon = ({ className }) => (
   <i
-    className={`fa ${className}`}
+    className={`fa ${className} fa-element`}
     aria-hidden='true'
   />
 )

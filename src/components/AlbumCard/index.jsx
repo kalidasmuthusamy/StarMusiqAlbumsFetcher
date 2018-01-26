@@ -46,7 +46,6 @@ const AlbumCard = ({
               linkRef={streamButtonRef}
               routeTo={album.streamingUrl}
             >
-              Stream
               {'                    '}
               <FaIcon
                 className='fa-play-circle'
@@ -60,7 +59,6 @@ const AlbumCard = ({
               linkRef={individualSongsButtonRef}
               routeTo={album.movieUrl}
             >
-              Individual Songs
               {'                    '}
               <FaIcon
                 className='fa-external-link'
@@ -75,7 +73,6 @@ const AlbumCard = ({
               linkRef={normalDownloadButtonRef}
               routeTo={album.downloadLinkNormal}
             >
-              Normal
               {'                    '}
               <FaIcon
                 className='fa-download'
@@ -87,11 +84,11 @@ const AlbumCard = ({
               linkRef={hqDownloadButtonRef}
               routeTo={album.downloadLinkHq}
             >
-              HQ
-              {'                    '}
               <FaIcon
                 className='fa-download'
               />
+              {'                    '}
+              <span className='hq-dwld-text'>(HQ)</span>
             </OutlinePrimaryButtonLink>
           </CardListItem>
         </ul>
