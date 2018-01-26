@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import ButtonLink from './ButtonLink';
 
-const PrimaryButtonLink = ({className, routeTo ,children, linkRef}) => (
+const PrimaryButtonLink = (props) => (
   <ButtonLink
+    {...props}
     className={'btn-primary'}
-    linkRef={linkRef}
-    routeTo={routeTo}
-  >
-    {children}
-  </ButtonLink>
+  />
 )
 
 export default PrimaryButtonLink;

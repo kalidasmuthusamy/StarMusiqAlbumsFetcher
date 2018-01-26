@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const CardListItem = ({ children}) => (
+const CardListItem = ({ children }) => (
   <li className='list-group-item'>
     {children}
   </li>

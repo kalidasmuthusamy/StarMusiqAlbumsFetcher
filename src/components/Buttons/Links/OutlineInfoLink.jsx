@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import ButtonLink from './ButtonLink';
 
-const OutlineInfoButtonLink = ({ className, routeTo, children, linkRef }) => (
+const OutlineInfoButtonLink = (props) => (
   <ButtonLink
+    {...props}
     className={'btn-outline-info'}
-    linkRef={linkRef}
-    routeTo={routeTo}
-  >
-    {children}
-  </ButtonLink>
+  />
 )
 
 export default OutlineInfoButtonLink;

@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import ButtonLink from './ButtonLink';
 
-const OutlinePrimaryButtonLink = ({ className, routeTo, children, linkRef }) => (
+const OutlinePrimaryButtonLink = (props) => (
   <ButtonLink
-    className={"btn-outline-primary"}
-    linkRef={linkRef}
-    routeTo={routeTo}
-  >
-    {children}
-  </ButtonLink>
+    {...props}
+    className={'btn-outline-primary'}
+  />
 );
 
 export default OutlinePrimaryButtonLink;
