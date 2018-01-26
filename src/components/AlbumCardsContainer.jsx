@@ -28,7 +28,7 @@ const AlbumCardsContainer = (props) => {
       <div className='row justify-content-center'>
         <div className='col-6'>
           <Button
-            className={'btn-primary waves-effect float-right'}
+            className={'btn-primary nav-button waves-effect float-right'}
             onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
             value='Prev'
             disabled={props.loading || (props.currentPageNumber == 1)}
@@ -37,7 +37,7 @@ const AlbumCardsContainer = (props) => {
         </div>
         <div className='col-6'>
           <Button
-            className={'btn-primary waves-effect float-left'}
+            className={'btn-primary nav-button waves-effect float-left'}
             onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
             value='Next'
             disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}

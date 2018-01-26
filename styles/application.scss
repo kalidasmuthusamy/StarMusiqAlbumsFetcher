@@ -51,3 +51,7 @@ img.center-image{
 .modal{
   display: block !important;
 }
+
+.nav-button:disabled {
+  opacity: 0.25;
+}
