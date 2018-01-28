@@ -51,10 +51,8 @@ const AlbumCard = ({
                 className='fa-play-circle'
               />
             </PrimaryButtonLink>
-          </CardListItem>
 
-          {/* Individual Songs Link Block */}
-          <CardListItem>
+            {/* Individual Songs Link Block */}
             <PrimaryButtonLink
               linkRef={individualSongsButtonRef}
               routeTo={album.movieUrl}
