@@ -12,6 +12,7 @@ class StarMusiqAlbumsFetcher {
     this.albums = [];
   }
 
+  /* Download Link Generation Helper */
   getDownloadLink(movieId, quality){
     function getDateTimeString() {
       const isoDateTimeString = new Date().toISOString();
