@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 // Modal-Content will be coming soon
 const ErrorModal = ({
   message,
-  ...restProps,
 }) => (
     <div className='modal' id='exampleModal' tabIndex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
       <div className='modal-dialog modal-sm modal-notify modal-danger' role='document'>
@@ -27,7 +26,5 @@ ErrorModal.propTypes = {
 ErrorModal.defaultProps = {
   message: 'Error',
 };
-
-
 
 export default ErrorModal;

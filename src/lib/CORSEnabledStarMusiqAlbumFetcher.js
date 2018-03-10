@@ -1,4 +1,4 @@
-import StarMusiqAlbumFetcher from './StarMusiqAlbumsFetcher';
+import StarMusiqAlbumFetcher from './StarMusiqAlbumsFetcher.js';
 
 class CORSEnabledStarMusiqAlbumFetcher extends StarMusiqAlbumFetcher{
   constructor(){

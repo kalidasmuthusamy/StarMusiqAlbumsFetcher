@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   CardImageHolder,
@@ -95,5 +96,23 @@ const AlbumCard = ({
     </div>
   );
 }
+
+AlbumCard.propTypes = {
+  album: PropTypes.shape({
+    albumName: PropTypes.string.isRequired,
+    casts: PropTypes.string.isRequired,
+    downloadLinkHq: PropTypes.string.isRequired,
+    downloadLinkNormal: PropTypes.string.isRequired,
+    movieIcon: PropTypes.string.isRequired,
+    movieId: PropTypes.string.isRequired,
+    movieUrl: PropTypes.string.isRequired,
+    musicDirector: PropTypes.string.isRequired,
+    streamingUrl: PropTypes.string.isRequired,
+  }).isRequired,
+  hqDownloadButtonRef: PropTypes.func.isRequired,
+  individualSongsButtonRef: PropTypes.func.isRequired,
+  normalDownloadButtonRef: PropTypes.func.isRequired,
+  streamButtonRef: PropTypes.func.isRequired,
+};
 
 export default AlbumCard;

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
+import { Shortcuts } from 'react-shortcuts';
+import { toInteger, toArray, last } from 'lodash';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
-
-import { Shortcuts } from 'react-shortcuts';
-
-import { toInteger, toArray, last } from 'lodash';
 
 class AlbumsFetcher extends Component {
   constructor(props) {
@@ -31,9 +29,9 @@ class AlbumsFetcher extends Component {
     };
   }
 
-  fetchAlbums = pageNumber => {
-    return this.starMusiqAlbumsRetriever.fetchAlbums(pageNumber);
-  };
+  fetchAlbums = (pageNumber) => (
+    this.starMusiqAlbumsRetriever.fetchAlbums(pageNumber)
+  );
 
   displayAlbumsOfPage = async pageNumber => {
     this.setState({

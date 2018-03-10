@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import AlbumsFetcher from './containers/AlbumsFetcher';
-
-import keymap from './lib/keymap';
 import { ShortcutManager } from 'react-shortcuts';
+
+import AlbumsFetcher from './containers/AlbumsFetcher';
+import keymap from './lib/keymap';
 
 class App extends Component {
   constructor(props){

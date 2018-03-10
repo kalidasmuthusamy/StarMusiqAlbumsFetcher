@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const CardTitleHolder = ({albumName, musicDirector}) => (
+const CardTitleHolder = ({ albumName, musicDirector }) => (
   <div>
     <h4 
       className='card-title indigo-text'
@@ -17,6 +18,11 @@ const CardTitleHolder = ({albumName, musicDirector}) => (
       </strong>
     </h5>
   </div>
-)
+);
+
+CardTitleHolder.propTypes = {
+  albumName: PropTypes.string.isRequired,
+  musicDirector: PropTypes.string.isRequired,
+};
 
 export default CardTitleHolder;
