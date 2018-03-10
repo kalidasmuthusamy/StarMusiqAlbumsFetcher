@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { forEach, split, nth } from 'lodash';
 
 class StarMusiqAlbumsFetcher {
   constructor(){
@@ -33,30 +34,40 @@ class StarMusiqAlbumsFetcher {
     // Making albums object empty for every page visit
     this.albums = [];
 
-    const $albumsTable = $(responseText).find('.main_tb3');
+    const $albumsTable = $(responseText).find('#featured_albums').find('.row');
+    const albumsBlockIndices = [0, 2];
 
-    $albumsTable.each((index, albumBlock) => {
-      const $album = $(albumBlock);
-      const albumLink = $album.find('a').eq(1);
-      const albumInfo = albumLink.text().split(' - ');
-      const albumHref = albumLink.attr('href');
-      const starrer = $album.find('tr').eq(2).find('td').last().text();
-      const movieId = albumHref.substring(albumHref.indexOf('=') + 1);
-      const movieIconUrl = $album.find('img').attr('src');
+    forEach(albumsBlockIndices, (albumBlockIndex) => {
+      const rowAlbums = $albumsTable.eq(albumBlockIndex).children();
 
-      const albumObj = {
-        albumName: (albumInfo[0]),
-        musicDirector: (albumInfo[1]),
-        casts: (starrer),
-        movieId: movieId,
-        movieUrl: (albumLink.attr('href').replace('.', this.siteConfig.albumBaseUrl)),
-        movieIcon: (movieIconUrl.replace('.', this.siteConfig.albumBaseUrl)),
-        streamingUrl: (this.siteConfig.streamBaseUrl + movieId),
-        downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
-        downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
-      }
+      forEach(rowAlbums, (singleAlbum) => {
+        const $albumBlock = $(singleAlbum);
+        const $linkSection = $albumBlock.find('.img-thumbnail').find('a').first();
+        const $albumInfoSection = $albumBlock.find('.clearfix.text-nowrap');
 
-      this.albums.push(albumObj);
+        const albumHref = $linkSection.attr('href');
+        const movieIconUrl = $linkSection.find('img').attr('src');
+        const [albumName, musicDirector] = split($albumInfoSection.find('h5').find('a').attr('title'), ' - ');
+        const casts = $albumInfoSection.find('div:nth-child(3) > span').attr('title');
+        const movieId = nth(
+          split(albumHref, '-'),
+          -3
+        );
+
+        const albumObj = {
+          albumName,
+          musicDirector,
+          casts,
+          movieId,
+          movieUrl: `${this.siteConfig.albumBaseUrl}${albumHref}`,
+          movieIcon: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
+          streamingUrl: `${this.siteConfig.streamBaseUrl}${movieId}`,
+          downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
+          downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
+        }
+
+        this.albums.push(albumObj);
+      });
     });
   }
   
