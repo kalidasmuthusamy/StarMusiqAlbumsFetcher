@@ -67,7 +67,7 @@ class AlbumsFetcher extends Component {
       /* using event.code since keyCode and which properties are deprecated
       and charCode is not required here
       Physical Key value is required */
-      toInteger(last(toArray(keyBoardEvent.code)))
+      toInteger(last(toArray(keyBoardEvent.code))) - 1
     );
 
     switch (action) {
