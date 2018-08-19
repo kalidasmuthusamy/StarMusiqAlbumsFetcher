@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Shortcuts } from 'react-shortcuts';
-import { toInteger, toArray, last } from 'lodash';
+import { toInteger, toArray, last, map, includes } from 'lodash';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
+import AlbumsStorageManager from '../lib/AlbumsStorageManager';
 
 class AlbumsFetcher extends Component {
   constructor(props) {
@@ -33,19 +34,42 @@ class AlbumsFetcher extends Component {
     this.starMusiqAlbumsRetriever.fetchAlbums(pageNumber)
   );
 
+  handleNewAlbums = (albums = []) => {
+    const { currentPageNumber } = this.state;
+    if (currentPageNumber !== 1){
+      return albums;
+    }
+
+    let handledAlbums = albums;
+    if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
+      const visitedAlbumNames = AlbumsStorageManager.getVisitedAlbumNames();
+      handledAlbums = map(albums, (album) => ({
+        ...album,
+        newAlbum: !includes(visitedAlbumNames, album['albumName']),
+      }));
+    }
+
+    AlbumsStorageManager.setVisitedAlbumNames(map(albums, 'albumName'));
+    return handledAlbums;
+  }
+
   displayAlbumsOfPage = async pageNumber => {
     this.setState({
-      loading: true
+      loading: true,
+      currentPageNumber: pageNumber,
     });
 
     try {
       const { albums } = await this.fetchAlbums(pageNumber);
+      const handledAlbums = this.handleNewAlbums(albums);
+
       this.setState({
-        albums,
-        currentPageNumber: pageNumber,
+        albums: handledAlbums,
         loading: false
       });
     } catch (e) {
+      console.log(e);
+
       this.setState(prevState => {
         return {
           loadingError: !prevState.loadingError,
