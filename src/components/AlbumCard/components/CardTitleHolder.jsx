@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CardTitleHolder = ({ albumName, musicDirector }) => (
-  <div>
+const CardTitleHolder = ({ albumName, musicDirector, customClassNames }) => (
+  <div className={customClassNames}>
     <h4 
       className='card-title indigo-text'
     >
@@ -23,6 +23,7 @@ const CardTitleHolder = ({ albumName, musicDirector }) => (
 CardTitleHolder.propTypes = {
   albumName: PropTypes.string.isRequired,
   musicDirector: PropTypes.string.isRequired,
+  customClassNames:'',
 };
 
 export default CardTitleHolder;
