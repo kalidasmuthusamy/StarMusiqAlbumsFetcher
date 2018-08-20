@@ -27,14 +27,14 @@ const AlbumCard = ({
       {/* Album Icon */}
       <CardImageHolder
         imageSource={album.movieIcon}
-        customClassNames={album.newAlbum ? 'animated pulse infinite' : ''}
+        customClassNames={album.unvisited ? 'animated pulse infinite' : ''}
       />
       <div className='card-body text-center'>
         {/* Album Header */}
         <CardTitleHolder
           albumName={album.albumName}
           musicDirector={album.musicDirector}
-          customClassNames={album.newAlbum ? 'animated pulse infinite' : ''}
+          customClassNames={album.unvisited ? 'animated pulse infinite' : ''}
         />
 
         <ul className='list-group list-group-flush'>

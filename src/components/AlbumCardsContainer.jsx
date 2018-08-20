@@ -75,7 +75,7 @@ AlbumCardsContainer.propTypes = {
       movieUrl: PropTypes.string.isRequired,
       musicDirector: PropTypes.string.isRequired,
       streamingUrl: PropTypes.string.isRequired,
-      newAlbum: PropTypes.bool,
+      unvisited: PropTypes.bool,
     })
   ).isRequired,
   currentPageNumber: PropTypes.number.isRequired,
