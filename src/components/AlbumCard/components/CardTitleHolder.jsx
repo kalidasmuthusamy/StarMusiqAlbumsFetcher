@@ -23,7 +23,11 @@ const CardTitleHolder = ({ albumName, musicDirector, customClassNames }) => (
 CardTitleHolder.propTypes = {
   albumName: PropTypes.string.isRequired,
   musicDirector: PropTypes.string.isRequired,
-  customClassNames:'',
+  customClassNames: PropTypes.string,
+};
+
+CardTitleHolder.defaultProps = {
+  customClassNames: '',
 };
 
 export default CardTitleHolder;

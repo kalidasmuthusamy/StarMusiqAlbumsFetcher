@@ -12,7 +12,11 @@ const CardHeader = ({ imageSource, customClassNames }) => (
 
 CardHeader.propTypes = {
   imageSource: PropTypes.string.isRequired,
+  customClassNames: PropTypes.string,
+};
+
+CardHeader.defaultProps = {
   customClassNames: '',
-}
+};
 
 export default CardHeader;
