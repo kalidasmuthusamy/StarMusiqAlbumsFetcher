@@ -35,10 +35,9 @@ class StarMusiqAlbumsFetcher {
     this.albums = [];
 
     const $albumsTable = $(responseText).find('#featured_albums').find('.row');
-    const albumsBlockIndices = [0, 2];
 
-    forEach(albumsBlockIndices, (albumBlockIndex) => {
-      const rowAlbums = $albumsTable.eq(albumBlockIndex).children();
+    forEach($albumsTable, (albumRow) => {
+      const rowAlbums = $(albumRow).children();
 
       forEach(rowAlbums, (singleAlbum) => {
         const $albumBlock = $(singleAlbum);
@@ -48,7 +47,7 @@ class StarMusiqAlbumsFetcher {
         const albumHref = $linkSection.attr('href');
         const movieIconUrl = $linkSection.find('img').attr('src');
         const [albumName, musicDirector] = split($albumInfoSection.find('h5').find('a').attr('title'), ' - ');
-        const casts = $albumInfoSection.find('div:nth-child(3) > span').attr('title');
+        const casts = $albumInfoSection.find('div:nth-child(3) > span').attr('title') || '';
         const movieId = nth(
           split(albumHref, '-'),
           -3
@@ -66,7 +65,9 @@ class StarMusiqAlbumsFetcher {
           downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
         }
 
-        this.albums.push(albumObj);
+        if(movieId){
+          this.albums.push(albumObj);
+        }
       });
     });
   }
