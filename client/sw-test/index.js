@@ -1,4 +1,4 @@
-const applicationServerPublicKey = '< webpush Vapid.publicKey>';
+const applicationServerPublicKey = 'BK6qXrMSIRdBHpCp1s_VF1td-CtU0eiRo143W1SiKopejh5lwOqCUMV-2CYrNdskGQfxp5JS0pMs8we0OcYH9So';
 let swReg = null;
 
 function urlB64ToUint8Array(base64String) {
@@ -23,7 +23,7 @@ function subscribeUser() {
     userVisibleOnly: true,
     applicationServerKey: applicationServerKey
   }).then(function (sub) {
-    console.log(sub);
+    console.log(JSON.stringify(sub));
     console.log('Endpoint URL: ', sub.endpoint);
   }).catch(function (e) {
     if (Notification.permission === 'denied') {
