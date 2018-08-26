@@ -1,5 +1,6 @@
 self.addEventListener('install', function (event) {
   // TODO: Callbacks after service worker installed
+  
 });
 
 
