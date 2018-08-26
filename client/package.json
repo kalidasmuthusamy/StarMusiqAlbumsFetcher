@@ -36,11 +36,12 @@
     "node-sass": "^4.5.2",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
-    "webpack": "^2.4.1",
+    "webpack": "^3.10.0",
     "webpack-dev-server": "^2.4.4"
   },
   "dependencies": {
     "babel-loader": "^7.0.0",
+    "compression-webpack-plugin": "^1.1.11",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "react": "^15.5.4",
