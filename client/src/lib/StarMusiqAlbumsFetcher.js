@@ -81,7 +81,7 @@ class StarMusiqAlbumsFetcher {
     const albumsURL = this.siteConfig.landingUrl + pageNumber;
     const thisContext = this;
 
-    return new window.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       const jqxhr = $.ajax(albumsURL);
       jqxhr.done(function (response) {
         thisContext.buildAlbumObjects(response);
