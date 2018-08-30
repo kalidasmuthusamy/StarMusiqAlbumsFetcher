@@ -3,6 +3,8 @@ import path from 'path';
 import db from './db';
 import logger from './logger';
 
+import asyncMiddleware from './middlewares/asyncMiddleware';
+
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 import Album from './models/Album';
 
@@ -18,13 +20,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/populate-new-album', (req, res) => {
+app.get('/print-new-albums', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
-  const fetchedAlbums = starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
 
-  res.send(JSON.stringify(fetchedAlbums));
-});
+  const fetchedAlbums = await starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
+
+  res.json(fetchedAlbums);
+}));
 
 app.listen(port, () => {
   logger(`Listening on port ${port}`);
