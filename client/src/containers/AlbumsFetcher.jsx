@@ -59,16 +59,18 @@ class AlbumsFetcher extends Component {
       currentPageNumber: pageNumber,
     });
 
-    try {
-      const { albums } = await this.fetchAlbums(pageNumber);
+    const responseObject = await this.fetchAlbums(pageNumber);
+
+    if (responseObject.status === 'success') {
+      const { albums } = responseObject;
       const handledAlbums = this.handleNewAlbums(albums);
 
       this.setState({
         albums: handledAlbums,
         loading: false
       });
-    } catch (e) {
-      console.log(e);
+    } else {
+      console.log(responseObject.errorMessage);
 
       this.setState(prevState => {
         return {
@@ -126,9 +128,9 @@ class AlbumsFetcher extends Component {
     this.displayAlbumsOfPage(this.state.currentPageNumber);
   };
 
-  componentWillUpdate = (nextProps, nextState) => {
-    console.log('Album Card Link Refs Flushed');
+  componentWillUpdate = (_nextProps, _nextState) => {
     this.flushAlbumCardRefs();
+    console.log('Album Card Link Refs Flushed');
   }
 
   render() {
