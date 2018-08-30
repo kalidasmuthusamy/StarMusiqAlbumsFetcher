@@ -1,6 +1,7 @@
-import $ from 'jquery';
 import axios from 'axios';
 import { forEach, split, nth } from 'lodash';
+import cheerio from 'cheerio';
+import btoa from 'btoa';
 
 class StarMusiqAlbumsFetcher {
   constructor(){
@@ -35,6 +36,7 @@ class StarMusiqAlbumsFetcher {
     // Making albums object empty for every page visit
     this.albums = [];
 
+    const $ = cheerio.load(responseText);
     const $albumsTable = $(responseText).find('#featured_albums').find('.row');
 
     forEach($albumsTable, (albumRow) => {
@@ -83,19 +85,24 @@ class StarMusiqAlbumsFetcher {
     const thisContext = this;
 
     try {
-      const response = await axios.get(albumsURL);
+      const response = await axios.get(albumsURL, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          origin: 'https://new-tamil-albums.herokuapp.com',
+        },
+      });
       await thisContext.buildAlbumObjects(response.data);
 
       const albumsCollection = {
         status: 'success',
         albums: thisContext.albums,
-        currPageNumber: 1,
       }
       return albumsCollection;
     } catch(e) {
+      console.log(e);
       const errorObject = {
         status: 'failure',
-        errorMessage: JSON.stringify(e),
+        errorMessage: `${e}`,
       }
 
       return errorObject;
