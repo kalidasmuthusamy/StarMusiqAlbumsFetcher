@@ -31,13 +31,14 @@ self.addEventListener('push', function (event) {
       }
 
       const album = JSON.parse(event.data.text());
+      const albumIconUrl = album['movieIconUrl'];
 
       const title = album['albumName'];
       const options = {
         body: `Composer: ${album.musicDirector}`,
-        icon: album['movieIconUrl'],
-        badge: album['movieIconUrl'],
-        image: album['movieIconUrl'],
+        icon: albumIconUrl,
+        badge: albumIconUrl,
+        image: albumIconUrl,
         silent: true,
         actions: [
           {
