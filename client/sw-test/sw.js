@@ -3,26 +3,77 @@ self.addEventListener('install', function (event) {
   
 });
 
+function isClientFocused() {
+  return clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  })
+    .then((windowClients) => {
+      let clientIsFocused = false;
+
+      for (let i = 0; i < windowClients.length; i++) {
+        const windowClient = windowClients[i];
+        if (windowClient.focused) {
+          clientIsFocused = true;
+          break;
+        }
+      }
+
+      return clientIsFocused;
+    });
+}
+
 
 self.addEventListener('push', function (event) {
-  console.log('[Service Worker] Push Received.');
-  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+  const displayNotificationPromiseChain = isClientFocused()
+    .then((clientIsFocused) => {
+      if (clientIsFocused) {
+        return;
+      }
 
-  const title = 'Push StarMusiq';
-  const options = {
-    body: 'Yay it works, Dass!',
-    icon: null,
-    badge: null
-  };
+      const album = JSON.parse(event.data.text());
 
-  event.waitUntil(self.registration.showNotification(title, options));
+      const title = album['albumName'];
+      const options = {
+        body: `Composer: ${album.musicDirector}`,
+        icon: album['movieIconUrl'],
+        badge: album['movieIconUrl'],
+        image: album['movieIconUrl'],
+        silent: true,
+        actions: [
+          {
+            action: album['movieUrl'],
+            title: 'Stream',
+            icon: null,
+          },
+          {
+            action: album['movieUrl'],
+            title: 'Download Hq',
+            icon: null,
+          },
+          {
+            action: album['movieUrl'],
+            title: 'Download Normal',
+            icon: null,
+          }
+        ]
+      };
+      // Client isn't focused, we need to show a notification.
+      return self.registration.showNotification(title, options);
+    });
+
+  event.waitUntil(displayNotificationPromiseChain);
 });
 
-
 self.addEventListener('notificationclick', function (event) {
-  event.notification.close();
+  if (!event.action) {
+    // Take to Home Page
+    return;
+  }
+  
+  clients.openWindow(event.action)
+});
 
-  event.waitUntil(
-    // clients.openWindow('https://developers.google.com/web/')
-  );
+self.addEventListener('notificationclose', function (_event) {
+  // Analytics if needed
 });
