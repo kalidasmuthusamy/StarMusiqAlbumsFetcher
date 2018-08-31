@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import webpush from 'web-push';
+import moment from 'moment';
 
 import db from './db';
 import logger from './logger';
@@ -83,20 +84,33 @@ app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
     'td9nEUyolZXfDVZRcQRtm - Nck_4BCpo74bQwR25u - o0'
   );
 
-  Subscription.find({}, (err, subscriptionCollection) => {
+  const startOfToday = moment().startOf('day');
+  Album.findOne({
+    createdAt: {
+      $gte: startOfToday,
+    }
+  }, (err, latestAlbum) => {
     if(err) {
-      res.status(500).json({ error: err });
+      // Error Handling
     } else {
-      if (subscriptionCollection) {
-        _.forEach(subscriptionCollection, (subscriptionRecord) => {
-          const pushSubscriptionMap = subscriptionRecord.get('payload');
-          webpush.sendNotification(pushSubscriptionMap.toJSON(), 'Hey Dass 123 !!!!');
+      if(latestAlbum) {
+        Subscription.find({}, (err, subscriptionCollection) => {
+          if (err) {
+            res.status(500).json({ error: err });
+          } else {
+            if (subscriptionCollection) {
+              _.forEach(subscriptionCollection, (subscriptionRecord) => {
+                const pushSubscriptionMap = subscriptionRecord.get('payload');
+                webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
+              });
+            } else {
+              // No subscriptions
+            }
+          }
         });
-      } else {
-        // No subscriptions
       }
     }
-  });
+  })
 
   res.json({ status: 'success'});
 }));
