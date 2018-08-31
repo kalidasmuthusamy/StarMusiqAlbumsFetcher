@@ -8,6 +8,8 @@ import asyncMiddleware from './middlewares/asyncMiddleware';
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 import Album from './models/Album';
 
+import _ from 'lodash';
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -20,13 +22,34 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/print-new-albums', asyncMiddleware(async (_req, res, _next) => {
+app.get('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
-  const fetchedAlbums = await starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
+  const fetchedAlbumsPayload = await starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
+  const { albums } = fetchedAlbumsPayload;
+  const latestAlbum = _.head(albums);
 
-  res.json(fetchedAlbums);
+  Album.findOne({ movieId: latestAlbum.movieId}, async (err, fetchedAlbum) => {
+    if(err) {
+      res.status(500).json({ error: err});
+    } else {
+      if(fetchedAlbum) {
+        res.json({
+          latestAlbum: fetchedAlbum,
+          created: false,
+        });
+      } else {
+        const createdAlbum = await Album.create({
+          ...latestAlbum,
+        });
+        res.json({
+          latestAlbum: createdAlbum,
+          created: true,
+        });
+      }
+    }
+  });
 }));
 
 app.listen(port, () => {
