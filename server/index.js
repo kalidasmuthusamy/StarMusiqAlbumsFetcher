@@ -1,17 +1,23 @@
 import express from 'express';
 import path from 'path';
+import bodyParser from 'body-parser';
+
 import db from './db';
 import logger from './logger';
 
 import asyncMiddleware from './middlewares/asyncMiddleware';
 
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
+
 import Album from './models/Album';
+import Subscription from './models/Subscription';
 
 import _ from 'lodash';
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
@@ -49,6 +55,21 @@ app.get('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
         });
       }
     }
+  });
+}));
+
+app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
+  const reqSubscriptionObject = req.body;
+
+  const createdSubscriptionObject = await Subscription.create({
+    payload: {
+      ...reqSubscriptionObject,
+    },
+  });
+
+  res.json({
+    sub: createdSubscriptionObject,
+    success: true,
   });
 }));
 
