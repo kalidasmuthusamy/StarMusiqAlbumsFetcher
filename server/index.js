@@ -3,18 +3,19 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import webpush from 'web-push';
 import moment from 'moment';
+import _ from 'lodash';
 
 import db from './db';
 import logger from './logger';
 
-import asyncMiddleware from './middlewares/asyncMiddleware';
-
-import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
-
 import Album from './models/Album';
 import Subscription from './models/Subscription';
 
-import _ from 'lodash';
+import asyncMiddleware from './middlewares/asyncMiddleware';
+import downloadImage from './utils/downloadImage';
+
+import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
+app.post('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
@@ -51,6 +52,10 @@ app.get('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
         const createdAlbum = await Album.create({
           ...latestAlbum,
         });
+
+        const { movieIconUrl, movieId } = createdAlbum;
+        await downloadImage(movieIconUrl, `./client/album_images/${movieId}.png`);
+
         res.json({
           latestAlbum: createdAlbum,
           created: true,
