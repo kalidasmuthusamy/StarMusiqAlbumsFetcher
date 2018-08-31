@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import StarMusiqAlbumsFetcher from '../../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
+const starMusiqAlbumsFetcher = new StarMusiqAlbumsFetcher();
 const Schema = mongoose.Schema;
 
 const AlbumSchema = new Schema({
@@ -33,10 +35,22 @@ const AlbumSchema = new Schema({
     type: Date,
     default: Date.now(),
   }
+}, {
+  toObject: {
+    virtuals: true,
+  },
+  toJSON: {
+    virtuals: true,
+  }
 });
 
-// TODO:
-// Setters for download Links using Fetcher Module
+AlbumSchema.virtual('downloadLinkNormal').get(function(){
+  return starMusiqAlbumsFetcher.getDownloadLink(this.movieId, 'normal');
+});
+
+AlbumSchema.virtual('downloadLinkHq').get(function () {
+  return starMusiqAlbumsFetcher.getDownloadLink(this.movieId, 'hq');
+});
 
 const AlbumModel = mongoose.model('Album', AlbumSchema)
 
