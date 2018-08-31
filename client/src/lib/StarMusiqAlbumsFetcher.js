@@ -62,7 +62,7 @@ class StarMusiqAlbumsFetcher {
           casts,
           movieId,
           movieUrl: `${this.siteConfig.albumBaseUrl}${albumHref}`,
-          movieIcon: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
+          movieIconUrl: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
           streamingUrl: `${this.siteConfig.streamBaseUrl}${movieId}`,
           downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
           downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))

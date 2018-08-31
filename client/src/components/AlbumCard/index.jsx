@@ -26,7 +26,7 @@ const AlbumCard = ({
     <div className='card card-cascade wider reverse my-4'>
       {/* Album Icon */}
       <CardImageHolder
-        imageSource={album.movieIcon}
+        imageSource={album.movieIconUrl}
         customClassNames={album.unvisited ? 'animated pulse infinite' : ''}
       />
       <div className='card-body text-center'>
@@ -105,7 +105,7 @@ AlbumCard.propTypes = {
     casts: PropTypes.string.isRequired,
     downloadLinkHq: PropTypes.string.isRequired,
     downloadLinkNormal: PropTypes.string.isRequired,
-    movieIcon: PropTypes.string.isRequired,
+    movieIconUrl: PropTypes.string.isRequired,
     movieId: PropTypes.string.isRequired,
     movieUrl: PropTypes.string.isRequired,
     musicDirector: PropTypes.string.isRequired,
