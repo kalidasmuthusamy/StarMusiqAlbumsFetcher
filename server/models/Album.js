@@ -21,7 +21,7 @@ const AlbumSchema = new Schema({
     type: String,
     required: true,
   },
-  movieIcon: {
+  movieIconUrl: {
     type: String,
     required: true,
   },
@@ -38,6 +38,6 @@ const AlbumSchema = new Schema({
 // TODO:
 // Setters for download Links using Fetcher Module
 
-const AlbumModel = mongoose.model('AlbumModel', AlbumSchema)
+const AlbumModel = mongoose.model('Album', AlbumSchema)
 
 export default AlbumModel;
