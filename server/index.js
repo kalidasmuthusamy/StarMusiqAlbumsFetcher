@@ -12,7 +12,6 @@ import Album from './models/Album';
 import Subscription from './models/Subscription';
 
 import asyncMiddleware from './middlewares/asyncMiddleware';
-import downloadImage from './utils/downloadImage';
 
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
@@ -52,9 +51,6 @@ app.post('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
         const createdAlbum = await Album.create({
           ...latestAlbum,
         });
-
-        const { movieIconUrl, movieId } = createdAlbum;
-        await downloadImage(movieIconUrl, `./client/album_images/${movieId}.png`);
 
         res.json({
           latestAlbum: createdAlbum,
