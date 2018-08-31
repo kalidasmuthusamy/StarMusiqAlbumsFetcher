@@ -70,7 +70,7 @@ AlbumCardsContainer.propTypes = {
       casts: PropTypes.string.isRequired,
       downloadLinkHq: PropTypes.string.isRequired,
       downloadLinkNormal: PropTypes.string.isRequired,
-      movieIcon: PropTypes.string.isRequired,
+      movieIconUrl: PropTypes.string.isRequired,
       movieId: PropTypes.string.isRequired,
       movieUrl: PropTypes.string.isRequired,
       musicDirector: PropTypes.string.isRequired,
