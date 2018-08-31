@@ -1,6 +1,5 @@
-self.addEventListener('install', function (event) {
+self.addEventListener('install', function (_event) {
   // TODO: Callbacks after service worker installed
-  
 });
 
 function isClientFocused() {
@@ -47,12 +46,12 @@ self.addEventListener('push', function (event) {
             icon: null,
           },
           {
-            action: album['movieUrl'],
+            action: album['downloadLinkHq'],
             title: 'Download Hq',
             icon: null,
           },
           {
-            action: album['movieUrl'],
+            action: album['downloadLinkNormal'],
             title: 'Download Normal',
             icon: null,
           }
@@ -67,11 +66,11 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   if (!event.action) {
-    // Take to Home Page
+    clients.openWindow('/');
     return;
   }
-  
-  clients.openWindow(event.action)
+
+  clients.openWindow(event.action);
 });
 
 self.addEventListener('notificationclose', function (_event) {
