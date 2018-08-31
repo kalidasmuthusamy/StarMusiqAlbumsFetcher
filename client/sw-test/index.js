@@ -16,6 +16,20 @@ function urlB64ToUint8Array(base64String) {
   return outputArray;
 }
 
+function updateSubscriptionOnServer(subscription) {
+  const subscriptionPostEndpoint = 'http://localhost:5000/save_subscription';
+
+  fetch(subscriptionPostEndpoint, {
+    method: 'POST',
+    body: JSON.stringify(subscription),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
+    .then(response => console.log('Success:', JSON.stringify(response)))
+    .catch(error => console.error('Error:', error));
+}
+
 function subscribeUser() {
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 
@@ -23,6 +37,7 @@ function subscribeUser() {
     userVisibleOnly: true,
     applicationServerKey: applicationServerKey
   }).then(function (sub) {
+    updateSubscriptionOnServer(sub);
     console.log(JSON.stringify(sub));
     console.log('Endpoint URL: ', sub.endpoint);
   }).catch(function (e) {
