@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+
 import StarMusiqAlbumsFetcher from '../../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
 const starMusiqAlbumsFetcher = new StarMusiqAlbumsFetcher();
 const Schema = mongoose.Schema;
 
-const AlbumSchema = new Schema({
+const albumSchema = new Schema({
   albumName: {
     type: String,
     required: true,
@@ -44,14 +45,14 @@ const AlbumSchema = new Schema({
   }
 });
 
-AlbumSchema.virtual('downloadLinkNormal').get(function(){
+albumSchema.virtual('downloadLinkNormal').get(function(){
   return starMusiqAlbumsFetcher.getDownloadLink(this.movieId, 'normal');
 });
 
-AlbumSchema.virtual('downloadLinkHq').get(function () {
+albumSchema.virtual('downloadLinkHq').get(function () {
   return starMusiqAlbumsFetcher.getDownloadLink(this.movieId, 'hq');
 });
 
-const AlbumModel = mongoose.model('Album', AlbumSchema)
+const AlbumModel = mongoose.model('Album', albumSchema)
 
 export default AlbumModel;
