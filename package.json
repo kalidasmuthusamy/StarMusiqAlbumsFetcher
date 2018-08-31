@@ -19,7 +19,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.2",
     "lodash": "^4.17.10",
-    "mongoose": "^5.2.10"
+    "mongoose": "^5.2.10",
+    "web-push": "^3.3.2"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

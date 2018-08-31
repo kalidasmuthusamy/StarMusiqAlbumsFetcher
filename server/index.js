@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import webpush from 'web-push';
 
 import db from './db';
 import logger from './logger';
@@ -71,6 +72,33 @@ app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
     sub: createdSubscriptionObject,
     success: true,
   });
+}));
+
+app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
+  webpush.setGCMAPIKey('AIzaSyBFdDlWDn8cLrCwzPHy53vsS_I_ctR5tUk');
+
+  webpush.setVapidDetails(
+    'mailto:localhost:3000',
+    'BK6qXrMSIRdBHpCp1s_VF1td-CtU0eiRo143W1SiKopejh5lwOqCUMV-2CYrNdskGQfxp5JS0pMs8we0OcYH9So',
+    'td9nEUyolZXfDVZRcQRtm - Nck_4BCpo74bQwR25u - o0'
+  );
+
+  Subscription.find({}, (err, subscriptionCollection) => {
+    if(err) {
+      res.status(500).json({ error: err });
+    } else {
+      if (subscriptionCollection) {
+        _.forEach(subscriptionCollection, (subscriptionRecord) => {
+          const pushSubscriptionMap = subscriptionRecord.get('payload');
+          webpush.sendNotification(pushSubscriptionMap.toJSON(), 'Hey Dass 123 !!!!');
+        });
+      } else {
+        // No subscriptions
+      }
+    }
+  });
+
+  res.json({ status: 'success'});
 }));
 
 app.listen(port, () => {
