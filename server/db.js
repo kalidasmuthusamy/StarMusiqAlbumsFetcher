@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const mongoDBConfig = 'mongodb://localhost/new_tamil_albums';
+const mongoDBConfig = process.env.DB_CONN_URL;
 
 mongoose.connect(mongoDBConfig, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;

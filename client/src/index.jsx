@@ -3,6 +3,9 @@
 // Load up the application styles
 require('../styles/application.scss');
 
+import ProcessEnvExporter from './lib/ProcessEnvExporter';
+ProcessEnvExporter.export();
+
 // Render the top-level React component
 import React from 'react';
 import ReactDOM from 'react-dom';

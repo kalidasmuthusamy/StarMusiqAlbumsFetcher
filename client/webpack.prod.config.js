@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
-
+var Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'source-map',
@@ -32,10 +32,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({ // <-- key to reducing React's size
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+    new Dotenv({
+      path: '../.env',
+      silent: false,
     }),
     new webpack.optimize.UglifyJsPlugin(),
     new CompressionPlugin({
