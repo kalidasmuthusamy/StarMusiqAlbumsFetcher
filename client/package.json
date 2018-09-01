@@ -45,6 +45,7 @@
     "btoa": "^1.2.1",
     "cheerio": "^1.0.0-rc.2",
     "compression-webpack-plugin": "^1.1.11",
+    "dotenv-webpack": "^1.5.7",
     "lodash": "^4.17.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

@@ -18,15 +18,27 @@ import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumF
 
 const app = express();
 const port = process.env.PORT || 5000;
-
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, '../client')));
+
+  app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
   // Handle React routing, return all requests to React app
   app.get('*', function (_req, res) {
     res.sendFile(path.join(__dirname, '../client', 'index.html'));
+  });
+} else {
+  app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
   });
 }
 
@@ -77,12 +89,12 @@ app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
 }));
 
 app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
-  webpush.setGCMAPIKey('AIzaSyBFdDlWDn8cLrCwzPHy53vsS_I_ctR5tUk');
+  webpush.setGCMAPIKey(process.env.GCM_API_KEY);
 
   webpush.setVapidDetails(
-    'mailto:localhost:3000',
-    'BK6qXrMSIRdBHpCp1s_VF1td-CtU0eiRo143W1SiKopejh5lwOqCUMV-2CYrNdskGQfxp5JS0pMs8we0OcYH9So',
-    'td9nEUyolZXfDVZRcQRtm - Nck_4BCpo74bQwR25u - o0'
+    process.env.WEB_PUSH_MAIL_TO_URL,
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
   );
 
   const startOfToday = moment().startOf('day');
@@ -104,6 +116,8 @@ app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
                 const pushSubscriptionMap = subscriptionRecord.get('payload');
                 webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
               });
+
+              res.json({ status: 'success' });
             } else {
               // No subscriptions
             }
@@ -113,7 +127,6 @@ app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
     }
   })
 
-  res.json({ status: 'success'});
 }));
 
 app.listen(port, () => {
