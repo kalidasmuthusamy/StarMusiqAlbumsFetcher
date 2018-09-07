@@ -11,7 +11,7 @@
     "server": "DEBUG=express:* nodemon ./index.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "node ./index.js",
-    "heroku-postbuild": "cd client && yarn install && yarn add --dev && npm run build"
+    "heroku-postbuild": "cd client && yarn install && yarn add --dev && yarn build"
   },
   "dependencies": {
     "babel-core": "^6.26.3",
