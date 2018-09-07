@@ -35,7 +35,7 @@ self.addEventListener('push', function (event) {
 
       const title = album['albumName'];
       const options = {
-        body: `Composer: ${album.musicDirector}`,
+        body: `${album.musicDirector}`,
         icon: albumIconUrl,
         badge: albumIconUrl,
         image: albumIconUrl,
@@ -48,7 +48,7 @@ self.addEventListener('push', function (event) {
           },
           {
             action: album['downloadLinkHq'],
-            title: 'Download Hq',
+            title: 'Download',
             icon: null,
           },
           {
