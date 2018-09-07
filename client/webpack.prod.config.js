@@ -35,6 +35,7 @@ module.exports = {
     new Dotenv({
       path: '../.env',
       silent: false,
+      systemvars: true,
     }),
     new webpack.optimize.UglifyJsPlugin(),
     new CompressionPlugin({
