@@ -66,12 +66,17 @@ self.addEventListener('push', function (event) {
 });
 
 self.addEventListener('notificationclick', function (event) {
-  if (!event.action) {
-    clients.openWindow('/');
-    return;
-  }
+  event.notification.close();
 
-  clients.openWindow(event.action);
+  if (!event.action) {
+    event.waitUntil(
+      clients.openWindow('/')
+    );
+  } else {
+    event.waitUntil(
+      clients.openWindow(event.action)
+    );
+  }
 });
 
 self.addEventListener('notificationclose', function (_event) {
