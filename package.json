@@ -4,14 +4,14 @@
   "engines": {
     "yarn": "1.9.4",
     "node": "9.6.1",
-    "npm": "5.6.0"
+    "npm": "6.4.1"
   },
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && npm run start",
     "server": "DEBUG=express:* nodemon ./index.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "node ./index.js",
-    "heroku-postbuild": "cd client && yarn install && yarn add --dev && yarn build"
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "babel-core": "^6.26.3",
