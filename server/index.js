@@ -112,9 +112,9 @@ app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
             res.status(500).json({ error: err });
           } else {
             if (subscriptionCollection) {
-              _.forEach(subscriptionCollection, (subscriptionRecord) => {
+              _.forEach(subscriptionCollection, async (subscriptionRecord) => {
                 const pushSubscriptionMap = subscriptionRecord.get('payload');
-                webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
+                await webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
               });
 
               res.json({ status: 'success' });
@@ -136,3 +136,11 @@ app.listen(port, () => {
     logger('DB connected');
   });
 });
+
+// handle all uncaught exceptions
+// see - https://nodejs.org/api/process.html#process_event_uncaughtexception
+process.on('uncaughtException', err => console.error('uncaught exception:', err));
+// handle all unhandled promise rejections
+// see - http://bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events
+// or for latest node - https://nodejs.org/api/process.html#process_event_unhandledrejection
+process.on('unhandledRejection', error => console.error('unhandled rejection:', error));
