@@ -88,7 +88,7 @@ app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
   });
 }));
 
-app.get('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
+app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
   webpush.setGCMAPIKey(process.env.GCM_API_KEY);
 
   webpush.setVapidDetails(
