@@ -51,8 +51,9 @@ function subscribeUser() {
 
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw-test/sw.js').then(function (reg) {
+  navigator.serviceWorker.register('../sw.js').then(function (reg) {
     swReg = reg;
+    reg.update();
 
     if (reg.installing) {
       console.log('Service worker installing');
