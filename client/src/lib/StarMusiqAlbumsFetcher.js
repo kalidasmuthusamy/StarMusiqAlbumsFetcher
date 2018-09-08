@@ -88,7 +88,7 @@ class StarMusiqAlbumsFetcher {
       const response = await axios.get(albumsURL, {
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          origin: 'https://new-tamil-albums.herokuapp.com',
+          ...((process.env.NODE_ENV !== 'development') && { origin: 'https://new-tamil-albums.herokuapp.com' })
         },
       });
       await thisContext.buildAlbumObjects(response.data);
