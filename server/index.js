@@ -112,9 +112,9 @@ app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
             res.status(500).json({ error: err });
           } else {
             if (subscriptionCollection) {
-              _.forEach(subscriptionCollection, async (subscriptionRecord) => {
+              _.forEach(subscriptionCollection, (subscriptionRecord) => {
                 const pushSubscriptionMap = subscriptionRecord.get('payload');
-                await webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
+                webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
               });
 
               res.json({ status: 'success' });
@@ -126,7 +126,7 @@ app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
       }
     }
   })
-
+  res.json({ status: 'success', message: "No Latest Albums To Notify" });
 }));
 
 app.listen(port, () => {
