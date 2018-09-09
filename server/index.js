@@ -42,6 +42,15 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.get('/get_albums', asyncMiddleware(async (req, res, _next) => {
+  const albums = await Album.find().sort([['weightage', 'descending']]);
+
+  res.json({
+    albums,
+    status: 'success',
+  });
+}));
+
 app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
   const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   // get albums from page 1 to 10
