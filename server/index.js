@@ -42,6 +42,51 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
+  const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+  // get albums from page 1 to 10
+  const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async pageNumber => {
+    const response = await (new StarMusiqAlbumsFetcher().fetchAlbums(pageNumber));
+
+    return ({
+      pageNumber: pageNumber,
+      albums: response.albums || [],
+    });
+  }));
+
+  // filter collections which have non-empty albums
+  const nonEmptyAlbumsCollection = _.filter(scrapedAlbumsCollection, (albumCollectionWithPageNumber) => (
+    !_.isEmpty(albumCollectionWithPageNumber.albums)
+  ));
+
+  const sortedPagesWithAlbums = _.sortBy(nonEmptyAlbumsCollection, 'pageNumber');
+  // // get highest page number which have album collections
+  const farthestPageWithAlbums = _.last(sortedPagesWithAlbums)['pageNumber'];
+  const reversedContentPageNumbers = _.slice(reversedPageNumbers, _.indexOf(reversedPageNumbers, farthestPageWithAlbums));
+
+  const createdAlbums = await Promise.all(_.map(reversedContentPageNumbers, async pageNumber => {
+    const albumsCollectionForCurrPageNumber = _.find(nonEmptyAlbumsCollection, { pageNumber: pageNumber});
+    // reversing albums since first album in the page should be created latest
+    const scrapedAlbums = _.reverse(albumsCollectionForCurrPageNumber['albums']);
+    const upsertedAlbums = await Promise.all(_.map(scrapedAlbums, async scrapedAlbum => {
+      const similarScrapedAlbumInDb = await Album.findOne({ movieId: scrapedAlbum.movieId });
+      if (similarScrapedAlbumInDb) {
+        return similarScrapedAlbumInDb;
+      } else {
+        const createdScrapedAlbum = await Album.create({
+          ...scrapedAlbum,
+        });
+
+        return createdScrapedAlbum;
+      }
+    }));
+
+    return upsertedAlbums;
+  }));
+
+  res.json({ albums: createdAlbums });
+}));
+
 app.post('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;

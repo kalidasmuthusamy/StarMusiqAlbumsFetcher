@@ -35,6 +35,10 @@ const albumSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+  },
+  published: {
+    type: Boolean,
+    default: false,
   }
 }, {
   toObject: {
