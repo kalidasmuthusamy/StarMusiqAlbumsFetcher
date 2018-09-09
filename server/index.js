@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production') {
 app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
   const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   // get albums from page 1 to 10
-  const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async pageNumber => {
+  const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async (pageNumber) => {
     const response = await (new StarMusiqAlbumsFetcher().fetchAlbums(pageNumber));
 
     return ({
@@ -64,17 +64,19 @@ app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
   const farthestPageWithAlbums = _.last(sortedPagesWithAlbums)['pageNumber'];
   const reversedContentPageNumbers = _.slice(reversedPageNumbers, _.indexOf(reversedPageNumbers, farthestPageWithAlbums));
 
-  const createdAlbums = await Promise.all(_.map(reversedContentPageNumbers, async pageNumber => {
+  const createdAlbums = await Promise.all(_.map(reversedContentPageNumbers, async (pageNumber, pageNumberIdx) => {
     const albumsCollectionForCurrPageNumber = _.find(nonEmptyAlbumsCollection, { pageNumber: pageNumber});
     // reversing albums since first album in the page should be created latest
     const scrapedAlbums = _.reverse(albumsCollectionForCurrPageNumber['albums']);
-    const upsertedAlbums = await Promise.all(_.map(scrapedAlbums, async scrapedAlbum => {
+    const upsertedAlbums = await Promise.all(_.map(scrapedAlbums, async (scrapedAlbum, scrapedAlbumIdx) => {
       const similarScrapedAlbumInDb = await Album.findOne({ movieId: scrapedAlbum.movieId });
       if (similarScrapedAlbumInDb) {
+        // TODO: Update MovieIcon Url
         return similarScrapedAlbumInDb;
       } else {
         const createdScrapedAlbum = await Album.create({
           ...scrapedAlbum,
+          weightage: (((pageNumberIdx + 1) * 50) + (scrapedAlbumIdx + 1)),
         });
 
         return createdScrapedAlbum;

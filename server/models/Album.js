@@ -39,6 +39,10 @@ const albumSchema = new Schema({
   published: {
     type: Boolean,
     default: false,
+  },
+  weightage: {
+    type: Number,
+    required: true,
   }
 }, {
   toObject: {
