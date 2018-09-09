@@ -69,9 +69,8 @@ app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
     // reversing albums since first album in the page should be created latest
     const scrapedAlbums = _.reverse(albumsCollectionForCurrPageNumber['albums']);
     const upsertedAlbums = await Promise.all(_.map(scrapedAlbums, async (scrapedAlbum, scrapedAlbumIdx) => {
-      const similarScrapedAlbumInDb = await Album.findOne({ movieId: scrapedAlbum.movieId });
+      const similarScrapedAlbumInDb = await Album.findOneAndUpdate({ movieId: scrapedAlbum.movieId }, { movieIconUrl: scrapedAlbum.movieIconUrl});
       if (similarScrapedAlbumInDb) {
-        // TODO: Update MovieIcon Url
         return similarScrapedAlbumInDb;
       } else {
         const createdScrapedAlbum = await Album.create({
