@@ -19,6 +19,7 @@ const albumSchema = new Schema({
   movieId: {
     type: Number,
     required: true,
+    unique: true,
   },
   movieUrl: {
     type: String,
@@ -43,6 +44,7 @@ const albumSchema = new Schema({
   weightage: {
     type: Number,
     required: true,
+    unique: true,
   }
 }, {
   toObject: {
