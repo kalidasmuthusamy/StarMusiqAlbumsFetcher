@@ -106,7 +106,7 @@ AlbumCard.propTypes = {
     downloadLinkHq: PropTypes.string.isRequired,
     downloadLinkNormal: PropTypes.string.isRequired,
     movieIconUrl: PropTypes.string.isRequired,
-    movieId: PropTypes.string.isRequired,
+    movieId: PropTypes.number.isRequired,
     movieUrl: PropTypes.string.isRequired,
     musicDirector: PropTypes.string.isRequired,
     streamingUrl: PropTypes.string.isRequired,

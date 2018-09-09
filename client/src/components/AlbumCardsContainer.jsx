@@ -27,26 +27,28 @@ const AlbumCardsContainer = (props) => {
           })
         }
       </div>
-      <div className='row justify-content-center'>
-        <div className='col-6'>
-          <Button
-            className={'btn-primary nav-button waves-effect float-right'}
-            onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
-            value='Prev'
-            disabled={props.loading || (props.currentPageNumber == 1)}
-            buttonRef={props.prevButtonRef}
-          />
+      {/*
+        <div className='row justify-content-center'>
+          <div className='col-6'>
+            <Button
+              className={'btn-primary nav-button waves-effect float-right'}
+              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
+              value='Prev'
+              disabled={props.loading || (props.currentPageNumber == 1)}
+              buttonRef={props.prevButtonRef}
+            />
+          </div>
+          <div className='col-6'>
+            <Button
+              className={'btn-primary nav-button waves-effect float-left'}
+              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
+              value='Next'
+              disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
+              buttonRef={props.nextButtonRef}
+            />
+          </div>
         </div>
-        <div className='col-6'>
-          <Button
-            className={'btn-primary nav-button waves-effect float-left'}
-            onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
-            value='Next'
-            disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
-            buttonRef={props.nextButtonRef}
-          />
-        </div>
-      </div>
+      */}
     </div>
   );
 
@@ -71,7 +73,7 @@ AlbumCardsContainer.propTypes = {
       downloadLinkHq: PropTypes.string.isRequired,
       downloadLinkNormal: PropTypes.string.isRequired,
       movieIconUrl: PropTypes.string.isRequired,
-      movieId: PropTypes.string.isRequired,
+      movieId: PropTypes.number.isRequired,
       movieUrl: PropTypes.string.isRequired,
       musicDirector: PropTypes.string.isRequired,
       streamingUrl: PropTypes.string.isRequired,

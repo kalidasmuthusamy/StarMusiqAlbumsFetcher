@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Shortcuts } from 'react-shortcuts';
 import { toInteger, toArray, last, map, includes } from 'lodash';
+import axios from 'axios';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
@@ -30,9 +31,10 @@ class AlbumsFetcher extends Component {
     };
   }
 
-  fetchAlbums = (pageNumber) => (
-    this.starMusiqAlbumsRetriever.fetchAlbums(pageNumber)
-  );
+  fetchAlbums = async (_pageNumber) => {
+    const response = await axios.get('http://localhost:5000/get_albums');
+    return response.data;
+  };
 
   handleNewAlbums = (albums = []) => {
     const { currentPageNumber } = this.state;
