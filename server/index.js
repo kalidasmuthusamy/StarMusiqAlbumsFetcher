@@ -97,35 +97,29 @@ app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
   res.json({ albums: createdAlbums });
 }));
 
-app.post('/populate_latest_album', asyncMiddleware(async (_req, res, _next) => {
+
+app.post('/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
+  const dbAlbums = await Album.find().sort([['weightage', 'descending']]);
+  const highestPersistedWeightage = _.head(dbAlbums)['weightage'] || 1000;
+
   const fetchedAlbumsPayload = await starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
-  const { albums } = fetchedAlbumsPayload;
-  const latestAlbum = _.head(albums);
+  const { albums: scrapedAlbums } = fetchedAlbumsPayload;
 
-  Album.findOne({ movieId: latestAlbum.movieId}, async (err, fetchedAlbum) => {
-    if(err) {
-      res.status(500).json({ error: err});
-    } else {
-      if(fetchedAlbum) {
-        res.json({
-          latestAlbum: fetchedAlbum,
-          created: false,
-        });
-      } else {
-        const createdAlbum = await Album.create({
-          ...latestAlbum,
-        });
+  const newestScrapedAlbums = _.reverse(scrapedAlbums);
+  const refreshedAlbums = await Promise.all(_.map(newestScrapedAlbums, async (scrapedAlbum, scrapedAlbumIdx) => {
+    await Album.findOneAndDelete({ movieId: scrapedAlbum.movieId });
+    const refreshedAlbum = await Album.create({
+      ...scrapedAlbum,
+      weightage: (highestPersistedWeightage + scrapedAlbumIdx + 1),
+    });
 
-        res.json({
-          latestAlbum: createdAlbum,
-          created: true,
-        });
-      }
-    }
-  });
+    return refreshedAlbum;
+  }));
+
+  res.json({ refreshedAlbums: refreshedAlbums });
 }));
 
 app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
