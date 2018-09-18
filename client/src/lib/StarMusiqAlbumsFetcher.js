@@ -74,10 +74,10 @@ class StarMusiqAlbumsFetcher {
       });
     });
   }
-  
+
   // Fetch response through ajax
   // Build Album objects by response parsing
-  // Return a promise to handle data 
+  // Return a promise to handle data
   // Asynchronously during DOM updation
   async fetchAlbums(pageNo) {
     const pageNumber = (pageNo == undefined) ? 1 : pageNo;
@@ -88,7 +88,7 @@ class StarMusiqAlbumsFetcher {
       const response = await axios.get(albumsURL, {
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          ...((process.env.NODE_ENV !== 'development') && { origin: 'https://new-tamil-albums.herokuapp.com' })
+          ...((typeof(window) === 'undefined' || process.env.NODE_ENV !== 'development') && { origin: 'https://new-tamil-albums.herokuapp.com' })
         },
       });
       await thisContext.buildAlbumObjects(response.data);
