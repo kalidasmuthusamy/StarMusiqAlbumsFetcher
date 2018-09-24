@@ -1,5 +1,6 @@
-var path = require('path');
-var Dotenv = require('dotenv-webpack');
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'source-map',
@@ -34,5 +35,9 @@ module.exports = {
       path: '../.env',
       silent: false,
     }),
+    new CopyWebpackPlugin([{
+      from: './src/assets/music-icon.png',
+      to: './build/'
+    }]),
   ],
 }

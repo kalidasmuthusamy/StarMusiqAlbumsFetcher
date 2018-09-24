@@ -1,7 +1,8 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
-var Dotenv = require('dotenv-webpack');
+const Dotenv = require('dotenv-webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -45,5 +46,9 @@ module.exports = {
       threshold: 10240,
       minRatio: 0.8
     }),
+    new CopyWebpackPlugin([{
+      from: './src/assets/music-icon.png',
+      to: './build/'
+    }]),
   ]
 }

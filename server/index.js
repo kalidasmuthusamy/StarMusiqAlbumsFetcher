@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import webpush from 'web-push';
-import moment from 'moment';
 import _ from 'lodash';
 
 import db from './db';
