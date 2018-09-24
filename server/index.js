@@ -78,7 +78,7 @@ app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
     // reversing albums since first album in the page should be created latest
     const scrapedAlbums = _.reverse(albumsCollectionForCurrPageNumber['albums']);
     const upsertedAlbums = await Promise.all(_.map(scrapedAlbums, async (scrapedAlbum, scrapedAlbumIdx) => {
-      const similarScrapedAlbumInDb = await Album.findOneAndUpdate({ movieId: scrapedAlbum.movieId }, { movieIconUrl: scrapedAlbum.movieIconUrl});
+      const similarScrapedAlbumInDb = await Album.findOneAndUpdate({ movieId: scrapedAlbum.movieId }, { movieIconUrl: scrapedAlbum.movieIconUrl });
       if (similarScrapedAlbumInDb) {
         return similarScrapedAlbumInDb;
       } else {
@@ -103,7 +103,7 @@ app.post('/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
   const latestAlbumsPageNumber = 1;
 
   const dbAlbums = await Album.find().sort([['weightage', 'descending']]);
-  const highestPersistedWeightage = _.head(dbAlbums)['weightage'] || 1000;
+  const highestPersistedWeightage = _.head(dbAlbums)['weightage'] || 100000;
 
   const fetchedAlbumsPayload = await starMusiqAlbumsRetriever.fetchAlbums(latestAlbumsPageNumber);
   const { albums: scrapedAlbums } = fetchedAlbumsPayload;
@@ -146,36 +146,23 @@ app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
     process.env.VAPID_PRIVATE_KEY
   );
 
-  const startOfToday = moment().startOf('day');
-  Album.findOne({
-    createdAt: {
-      $gte: startOfToday,
-    }
-  }, (err, latestAlbum) => {
-    if(err) {
-      // Error Handling
-    } else {
-      if(latestAlbum) {
-        Subscription.find({}, (err, subscriptionCollection) => {
-          if (err) {
-            res.status(500).json({ error: err });
-          } else {
-            if (subscriptionCollection) {
-              _.forEach(subscriptionCollection, (subscriptionRecord) => {
-                const pushSubscriptionMap = subscriptionRecord.get('payload');
-                webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestAlbum));
-              });
+  const latestAlbums = await Album.find({}).sort([['weightage', 'descending']]);
+  const latestAlbum = _.head(latestAlbums);
+  const latestUnpublishedAlbum = latestAlbum.published ? null : latestAlbum;
 
-              res.json({ status: 'success' });
-            } else {
-              // No subscriptions
-            }
-          }
-        });
-      }
-    }
-  })
-  res.json({ status: 'success', message: "No Latest Albums To Notify" });
+  if(!_.isNil(latestUnpublishedAlbum)) {
+    const userSubscriptions = await Subscription.find({});
+
+    _.forEach(userSubscriptions, (userSubscription) => {
+      const pushSubscriptionMap = userSubscription.get('payload');
+      webpush.sendNotification(pushSubscriptionMap.toJSON(), JSON.stringify(latestUnpublishedAlbum));
+    });
+
+    await Album.findOneAndUpdate({ _id: latestUnpublishedAlbum['_id'] }, { published: true });
+    res.json({ status: "success", usersNotifiedCount: _.size(userSubscriptions) });
+  } else {
+    res.json({ status: "no-op", message: "No unpublished albums found"});
+  }
 }));
 
 app.listen(port, () => {
