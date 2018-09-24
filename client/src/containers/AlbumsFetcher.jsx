@@ -39,14 +39,14 @@ class AlbumsFetcher extends Component {
   handleNewAlbums = (albums = []) => {
     let handledAlbums = albums;
     if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
-      const visitedAlbumNames = AlbumsStorageManager.getVisitedAlbumNames();
+      const visitedAlbumIds = AlbumsStorageManager.getVisitedAlbumIds();
       handledAlbums = map(albums, (album) => ({
         ...album,
-        unvisited: !includes(visitedAlbumNames, album['albumName']),
+        unvisited: !includes(visitedAlbumIds, album['id']),
       }));
     }
 
-    AlbumsStorageManager.setVisitedAlbumNames(map(albums, 'albumName'));
+    AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'id'));
     return handledAlbums;
   }
 
