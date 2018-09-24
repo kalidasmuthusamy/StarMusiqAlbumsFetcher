@@ -19,6 +19,7 @@ const albumSchema = new Schema({
   movieId: {
     type: Number,
     required: true,
+    unique: true,
   },
   movieUrl: {
     type: String,
@@ -35,6 +36,15 @@ const albumSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+  },
+  published: {
+    type: Boolean,
+    default: false,
+  },
+  weightage: {
+    type: Number,
+    required: true,
+    unique: true,
   }
 }, {
   toObject: {

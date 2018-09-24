@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from './Buttons/';
+// import Button from './Buttons/';
 import AlbumCard from './AlbumCard/';
 import Spinner from './Spinner';
 import ErrorModal from './ErrorModal';
@@ -27,26 +27,28 @@ const AlbumCardsContainer = (props) => {
           })
         }
       </div>
-      <div className='row justify-content-center'>
-        <div className='col-6'>
-          <Button
-            className={'btn-primary nav-button waves-effect float-right'}
-            onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
-            value='Prev'
-            disabled={props.loading || (props.currentPageNumber == 1)}
-            buttonRef={props.prevButtonRef}
-          />
+      {/*
+        <div className='row justify-content-center'>
+          <div className='col-6'>
+            <Button
+              className={'btn-primary nav-button waves-effect float-right'}
+              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
+              value='Prev'
+              disabled={props.loading || (props.currentPageNumber == 1)}
+              buttonRef={props.prevButtonRef}
+            />
+          </div>
+          <div className='col-6'>
+            <Button
+              className={'btn-primary nav-button waves-effect float-left'}
+              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
+              value='Next'
+              disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
+              buttonRef={props.nextButtonRef}
+            />
+          </div>
         </div>
-        <div className='col-6'>
-          <Button
-            className={'btn-primary nav-button waves-effect float-left'}
-            onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
-            value='Next'
-            disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
-            buttonRef={props.nextButtonRef}
-          />
-        </div>
-      </div>
+      */}
     </div>
   );
 
@@ -71,25 +73,20 @@ AlbumCardsContainer.propTypes = {
       downloadLinkHq: PropTypes.string.isRequired,
       downloadLinkNormal: PropTypes.string.isRequired,
       movieIconUrl: PropTypes.string.isRequired,
-      movieId: PropTypes.string.isRequired,
+      movieId: PropTypes.number.isRequired,
       movieUrl: PropTypes.string.isRequired,
       musicDirector: PropTypes.string.isRequired,
       streamingUrl: PropTypes.string.isRequired,
       unvisited: PropTypes.bool,
     })
   ).isRequired,
-  currentPageNumber: PropTypes.number.isRequired,
-  displayAlbumsOfPage: PropTypes.func.isRequired,
   hqDownloadButtonRef: PropTypes.func.isRequired,
   individualSongsButtonRef: PropTypes.func.isRequired,
   normalDownloadButtonRef: PropTypes.func.isRequired,
   streamButtonRef: PropTypes.func.isRequired,
-  nextButtonRef: PropTypes.func.isRequired,
-  prevButtonRef: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   loadingError: PropTypes.bool.isRequired,
   loadingErrorMessage: PropTypes.string.isRequired,
-  topAlbumsPageLimit: PropTypes.number.isRequired,
 };
 
 export default AlbumCardsContainer;
