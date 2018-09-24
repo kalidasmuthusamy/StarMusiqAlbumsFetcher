@@ -13,7 +13,6 @@ class AlbumsFetcher extends Component {
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.loadingErrorMessage = "Error! Please Try Again";
-    this.topAlbumsPageLimit = 5;
 
     this.prevButtonRef = null;
     this.nextButtonRef = null;
@@ -23,25 +22,21 @@ class AlbumsFetcher extends Component {
     this.normalDownloadButtonRef = [];
     this.hqDownloadButtonRef = [];
 
+    this.getAlbumsEndpoint = ((process.env.NODE_ENV === 'development') ? 'http://localhost:5000' : '') + '/get_albums';
+
     this.state = {
       albums: [],
-      currentPageNumber: 1,
       loading: false,
       loadingError: false
     };
   }
 
-  fetchAlbums = async (_pageNumber) => {
-    const response = await axios.get('http://localhost:5000/get_albums');
+  fetchAlbums = async () => {
+    const response = await axios.get(this.getAlbumsEndpoint);
     return response.data;
   };
 
   handleNewAlbums = (albums = []) => {
-    const { currentPageNumber } = this.state;
-    if (currentPageNumber !== 1){
-      return albums;
-    }
-
     let handledAlbums = albums;
     if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
       const visitedAlbumNames = AlbumsStorageManager.getVisitedAlbumNames();
@@ -55,13 +50,12 @@ class AlbumsFetcher extends Component {
     return handledAlbums;
   }
 
-  displayAlbumsOfPage = async pageNumber => {
+  displayAlbumsOfPage = async () => {
     this.setState({
       loading: true,
-      currentPageNumber: pageNumber,
     });
 
-    const responseObject = await this.fetchAlbums(pageNumber);
+    const responseObject = await this.fetchAlbums();
 
     if (responseObject.status === 'success') {
       const { albums } = responseObject;
@@ -127,7 +121,7 @@ class AlbumsFetcher extends Component {
   };
 
   componentDidMount = () => {
-    this.displayAlbumsOfPage(this.state.currentPageNumber);
+    this.displayAlbumsOfPage();
   };
 
   componentWillUpdate = (_nextProps, _nextState) => {
@@ -137,18 +131,14 @@ class AlbumsFetcher extends Component {
 
   render() {
     return (
-      <Shortcuts 
+      <Shortcuts
         name="ALBUMS_CONTAINER"
         handler={this._handleShortcuts}
         targetNodeSelector={'body'}
       >
         <AlbumCardsContainer
           {...this.state}
-          displayAlbumsOfPage={this.displayAlbumsOfPage}
-          topAlbumsPageLimit={this.topAlbumsPageLimit}
           loadingErrorMessage={this.loadingErrorMessage}
-          prevButtonRef={el => (this.prevButtonRef = el)}
-          nextButtonRef={el => (this.nextButtonRef = el)}
           streamButtonRef={el => this.streamButtonRef.push(el)}
           individualSongsButtonRef={el =>
             this.individualSongsButtonRef.push(el)

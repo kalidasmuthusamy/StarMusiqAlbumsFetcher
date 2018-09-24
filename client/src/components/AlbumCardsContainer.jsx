@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from './Buttons/';
+// import Button from './Buttons/';
 import AlbumCard from './AlbumCard/';
 import Spinner from './Spinner';
 import ErrorModal from './ErrorModal';
@@ -80,18 +80,13 @@ AlbumCardsContainer.propTypes = {
       unvisited: PropTypes.bool,
     })
   ).isRequired,
-  currentPageNumber: PropTypes.number.isRequired,
-  displayAlbumsOfPage: PropTypes.func.isRequired,
   hqDownloadButtonRef: PropTypes.func.isRequired,
   individualSongsButtonRef: PropTypes.func.isRequired,
   normalDownloadButtonRef: PropTypes.func.isRequired,
   streamButtonRef: PropTypes.func.isRequired,
-  nextButtonRef: PropTypes.func.isRequired,
-  prevButtonRef: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   loadingError: PropTypes.bool.isRequired,
   loadingErrorMessage: PropTypes.string.isRequired,
-  topAlbumsPageLimit: PropTypes.number.isRequired,
 };
 
 export default AlbumCardsContainer;
