@@ -22,7 +22,7 @@ img.center-image{
     position: absolute;
     top: 0;
     left: 0;
-    
+
     -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
     animation: sk-bounce 2.0s infinite ease-in-out;
   }
@@ -38,10 +38,10 @@ img.center-image{
   }
 
   @keyframes sk-bounce {
-    0%, 100% { 
+    0%, 100% {
       transform: scale(0.0);
       -webkit-transform: scale(0.0);
-    } 50% { 
+    } 50% {
       transform: scale(1.0);
       -webkit-transform: scale(1.0);
     }
@@ -66,4 +66,12 @@ span.hq-dwld-text{
 
 p.card-title {
   margin-bottom: 0rem !important;
+}
+
+nav.app-header {
+  justify-content: center;
+}
+
+.header-text {
+  font-weight: bolder;
 }

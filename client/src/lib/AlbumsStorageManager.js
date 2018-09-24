@@ -1,21 +1,21 @@
-import { get, isNil, isEmpty } from 'lodash';
+import { isNil, isEmpty } from 'lodash';
 
-const ALBUM_NAMES_REF_KEY = 'albumNames';
+const ALBUM_IDENTIFIER_REF_KEY = 'albumIds';
 
 class AlbumsStorageManager {
-  static getVisitedAlbumNames = () => (
-    JSON.parse(window.localStorage.getItem(ALBUM_NAMES_REF_KEY) || '[]')
+  static getVisitedAlbumIds = () => (
+    JSON.parse(window.localStorage.getItem(ALBUM_IDENTIFIER_REF_KEY) || '[]')
   )
 
   static isVisitedAlbumsPresent = () => {
-    const albumNames = AlbumsStorageManager.getVisitedAlbumNames();
+    const albumIds = AlbumsStorageManager.getVisitedAlbumIds();
     return !(
-      isNil(albumNames) || isEmpty(albumNames)
+      isNil(albumIds) || isEmpty(albumIds)
     );
   }
 
-  static setVisitedAlbumNames = (albumNames = []) => {
-    window.localStorage.setItem(ALBUM_NAMES_REF_KEY, JSON.stringify(albumNames));
+  static setVisitedAlbumIds = (albumIds = []) => {
+    window.localStorage.setItem(ALBUM_IDENTIFIER_REF_KEY, JSON.stringify(albumIds));
   }
 }
 

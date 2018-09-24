@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Shortcuts } from 'react-shortcuts';
 import { toInteger, toArray, last, map, includes } from 'lodash';
+import axios from 'axios';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
@@ -12,7 +13,6 @@ class AlbumsFetcher extends Component {
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.loadingErrorMessage = "Error! Please Try Again";
-    this.topAlbumsPageLimit = 5;
 
     this.prevButtonRef = null;
     this.nextButtonRef = null;
@@ -22,53 +22,51 @@ class AlbumsFetcher extends Component {
     this.normalDownloadButtonRef = [];
     this.hqDownloadButtonRef = [];
 
+    this.getAlbumsEndpoint = ((process.env.NODE_ENV === 'development') ? 'http://localhost:5000' : '') + '/get_albums';
+
     this.state = {
       albums: [],
-      currentPageNumber: 1,
       loading: false,
       loadingError: false
     };
   }
 
-  fetchAlbums = (pageNumber) => (
-    this.starMusiqAlbumsRetriever.fetchAlbums(pageNumber)
-  );
+  fetchAlbums = async () => {
+    const response = await axios.get(this.getAlbumsEndpoint);
+    return response.data;
+  };
 
   handleNewAlbums = (albums = []) => {
-    const { currentPageNumber } = this.state;
-    if (currentPageNumber !== 1){
-      return albums;
-    }
-
     let handledAlbums = albums;
     if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
-      const visitedAlbumNames = AlbumsStorageManager.getVisitedAlbumNames();
+      const visitedAlbumIds = AlbumsStorageManager.getVisitedAlbumIds();
       handledAlbums = map(albums, (album) => ({
         ...album,
-        unvisited: !includes(visitedAlbumNames, album['albumName']),
+        unvisited: !includes(visitedAlbumIds, album['id']),
       }));
     }
 
-    AlbumsStorageManager.setVisitedAlbumNames(map(albums, 'albumName'));
+    AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'id'));
     return handledAlbums;
   }
 
-  displayAlbumsOfPage = async pageNumber => {
+  displayAlbumsOfPage = async () => {
     this.setState({
       loading: true,
-      currentPageNumber: pageNumber,
     });
 
-    try {
-      const { albums } = await this.fetchAlbums(pageNumber);
+    const responseObject = await this.fetchAlbums();
+
+    if (responseObject.status === 'success') {
+      const { albums } = responseObject;
       const handledAlbums = this.handleNewAlbums(albums);
 
       this.setState({
         albums: handledAlbums,
         loading: false
       });
-    } catch (e) {
-      console.log(e);
+    } else {
+      console.log(responseObject.errorMessage);
 
       this.setState(prevState => {
         return {
@@ -123,28 +121,24 @@ class AlbumsFetcher extends Component {
   };
 
   componentDidMount = () => {
-    this.displayAlbumsOfPage(this.state.currentPageNumber);
+    this.displayAlbumsOfPage();
   };
 
-  componentWillUpdate = (nextProps, nextState) => {
-    console.log('Album Card Link Refs Flushed');
+  componentWillUpdate = (_nextProps, _nextState) => {
     this.flushAlbumCardRefs();
+    console.log('Album Card Link Refs Flushed');
   }
 
   render() {
     return (
-      <Shortcuts 
+      <Shortcuts
         name="ALBUMS_CONTAINER"
         handler={this._handleShortcuts}
         targetNodeSelector={'body'}
       >
         <AlbumCardsContainer
           {...this.state}
-          displayAlbumsOfPage={this.displayAlbumsOfPage}
-          topAlbumsPageLimit={this.topAlbumsPageLimit}
           loadingErrorMessage={this.loadingErrorMessage}
-          prevButtonRef={el => (this.prevButtonRef = el)}
-          nextButtonRef={el => (this.nextButtonRef = el)}
           streamButtonRef={el => this.streamButtonRef.push(el)}
           individualSongsButtonRef={el =>
             this.individualSongsButtonRef.push(el)

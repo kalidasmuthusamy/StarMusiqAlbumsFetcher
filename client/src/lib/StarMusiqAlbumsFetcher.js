@@ -1,5 +1,7 @@
-import $ from 'jquery';
+import axios from 'axios';
 import { forEach, split, nth } from 'lodash';
+import cheerio from 'cheerio';
+import btoa from 'btoa';
 
 class StarMusiqAlbumsFetcher {
   constructor(){
@@ -34,6 +36,7 @@ class StarMusiqAlbumsFetcher {
     // Making albums object empty for every page visit
     this.albums = [];
 
+    const $ = cheerio.load(responseText);
     const $albumsTable = $(responseText).find('#featured_albums').find('.row');
 
     forEach($albumsTable, (albumRow) => {
@@ -59,7 +62,7 @@ class StarMusiqAlbumsFetcher {
           casts,
           movieId,
           movieUrl: `${this.siteConfig.albumBaseUrl}${albumHref}`,
-          movieIcon: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
+          movieIconUrl: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
           streamingUrl: `${this.siteConfig.streamBaseUrl}${movieId}`,
           downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
           downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
@@ -71,36 +74,39 @@ class StarMusiqAlbumsFetcher {
       });
     });
   }
-  
+
   // Fetch response through ajax
   // Build Album objects by response parsing
-  // Return a promise to handle data 
+  // Return a promise to handle data
   // Asynchronously during DOM updation
-  fetchAlbums(pageNo) {
+  async fetchAlbums(pageNo) {
     const pageNumber = (pageNo == undefined) ? 1 : pageNo;
     const albumsURL = this.siteConfig.landingUrl + pageNumber;
     const thisContext = this;
 
-    return new window.Promise(function (resolve, reject) {
-      const jqxhr = $.ajax(albumsURL);
-      jqxhr.done(function (response) {
-        thisContext.buildAlbumObjects(response);
-      }).then(function () {
-        const resolvedObject = {
-          albums: thisContext.albums,
-          currPageNumber: 1
-        }
-        resolve(resolvedObject);
+    try {
+      const response = await axios.get(albumsURL, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          ...((typeof(window) === 'undefined' || process.env.NODE_ENV !== 'development') && { origin: 'https://new-tamil-albums.herokuapp.com' })
+        },
       });
+      await thisContext.buildAlbumObjects(response.data);
 
-      jqxhr.fail(function (jqXHR, textStatus, errorThrown) {
-        const errorObject = {
-          status: textStatus,
-          errorMessage: errorThrown
-        }
-        reject(errorObject);
-      });
-    });
+      const albumsCollection = {
+        status: 'success',
+        albums: thisContext.albums,
+      }
+      return albumsCollection;
+    } catch(e) {
+      console.log(e);
+      const errorObject = {
+        status: 'failure',
+        errorMessage: `${e}`,
+      }
+
+      return errorObject;
+    };
   }
 }
 

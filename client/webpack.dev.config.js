@@ -1,12 +1,12 @@
 var path = require('path');
-var webpack = require('webpack');
+var Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'source-map',
   entry: [
     'babel-polyfill',
     'webpack-dev-server/client?http://localhost:3000',
-    './src/index.jsx'
+    './src/index.jsx',
   ],
   output: {
     path: path.join(__dirname, 'build'),
@@ -27,6 +27,12 @@ module.exports = {
         test: /\.scss$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader']
       }
-    ]
-  }
+    ],
+  },
+  plugins: [
+    new Dotenv({
+      path: '../.env',
+      silent: false,
+    }),
+  ],
 }
