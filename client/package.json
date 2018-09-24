@@ -51,8 +51,8 @@
     "compression-webpack-plugin": "^1.1.11",
     "dotenv-webpack": "^1.5.7",
     "lodash": "^4.17.4",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react": "16.4.2",
+    "react-dom": "16.4.2",
     "react-shortcuts": "^2.0.0"
   },
   "main": "server.js",

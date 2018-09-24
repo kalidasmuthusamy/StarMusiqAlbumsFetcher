@@ -77,13 +77,6 @@ class AlbumsFetcher extends Component {
     }
   };
 
-  flushAlbumCardRefs = () => {
-    this.streamButtonRef = [];
-    this.individualSongsButtonRef = [];
-    this.normalDownloadButtonRef = [];
-    this.hqDownloadButtonRef = [];
-  };
-
   _handleShortcuts = (action, event) => {
     const getAlbumIndex = (keyBoardEvent) => (
       /* using event.code since keyCode and which properties are deprecated
@@ -123,11 +116,6 @@ class AlbumsFetcher extends Component {
   componentDidMount = () => {
     this.displayAlbumsOfPage();
   };
-
-  componentWillUpdate = (_nextProps, _nextState) => {
-    this.flushAlbumCardRefs();
-    console.log('Album Card Link Refs Flushed');
-  }
 
   render() {
     return (
