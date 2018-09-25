@@ -2,7 +2,6 @@
   "name": "starmusiq-express",
   "version": "1.0.0",
   "engines": {
-    "yarn": "1.9.4",
     "node": "9.6.1",
     "npm": "6.4.1"
   },
