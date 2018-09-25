@@ -18,7 +18,7 @@ function urlB64ToUint8Array(base64String) {
 }
 
 function updateSubscriptionOnServer(subscription) {
-  const subscriptionPostEndpoint = processEnvExporter.BACKEND_API_BASE_URL + '/save_subscription';
+  const subscriptionPostEndpoint = processEnvExporter.BACKEND_API_BASE_URL + '/api/save_subscription';
 
   fetch(subscriptionPostEndpoint, {
     method: 'POST',
