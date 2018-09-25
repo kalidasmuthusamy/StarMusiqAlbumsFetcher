@@ -11,6 +11,7 @@ import Album from './models/Album';
 import Subscription from './models/Subscription';
 
 import asyncMiddleware from './middlewares/asyncMiddleware';
+import basicAuthMiddleware from './middlewares/basicAuthMiddleware';
 
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
@@ -51,7 +52,7 @@ app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
   });
 }));
 
-app.post('/api/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/hydrate_albums', basicAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   // get albums from page 1 to 10
   const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async (pageNumber) => {
@@ -98,7 +99,7 @@ app.post('/api/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
 }));
 
 
-app.post('/api/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/refresh_albums', basicAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
@@ -122,7 +123,7 @@ app.post('/api/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
   res.json({ refreshedAlbums: refreshedAlbums });
 }));
 
-app.post('/api/save_subscription', asyncMiddleware(async (req, res, _next) => {
+app.post('/api/save_subscription', basicAuthMiddleware, asyncMiddleware(async (req, res, _next) => {
   const reqSubscriptionObject = req.body;
 
   const createdSubscriptionObject = await Subscription.create({
@@ -137,7 +138,7 @@ app.post('/api/save_subscription', asyncMiddleware(async (req, res, _next) => {
   });
 }));
 
-app.post('/api/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/push_to_subscribers', basicAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   webpush.setGCMAPIKey(process.env.GCM_API_KEY);
 
   webpush.setVapidDetails(
