@@ -36,18 +36,18 @@ class AlbumsFetcher extends Component {
     return response.data;
   };
 
-  handleNewAlbums = (albums = []) => {
-    let handledAlbums = albums;
+  highlightNewAlbums = (albums = []) => {
+    let highlightedAlbums = albums;
     if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
       const visitedAlbumIds = AlbumsStorageManager.getVisitedAlbumIds();
-      handledAlbums = map(albums, (album) => ({
+      highlightedAlbums = map(albums, (album) => ({
         ...album,
         unvisited: !includes(visitedAlbumIds, album['id']),
       }));
     }
 
     AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'id'));
-    return handledAlbums;
+    return highlightedAlbums;
   }
 
   displayAlbumsOfPage = async () => {
@@ -59,10 +59,10 @@ class AlbumsFetcher extends Component {
 
     if (responseObject.status === 'success') {
       const { albums } = responseObject;
-      const handledAlbums = this.handleNewAlbums(albums);
+      // const highlightedAlbums = this.highlightNewAlbums(albums);
 
       this.setState({
-        albums: handledAlbums,
+        albums: albums,
         loading: false
       });
     } else {
