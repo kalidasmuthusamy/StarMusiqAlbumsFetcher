@@ -22,7 +22,7 @@ class AlbumsFetcher extends Component {
     this.normalDownloadButtonRef = [];
     this.hqDownloadButtonRef = [];
 
-    this.getAlbumsEndpoint = ((process.env.NODE_ENV === 'development') ? 'http://localhost:5000' : '') + '/get_albums';
+    this.getAlbumsEndpoint = (process.env.BACKEND_API_BASE_URL) + '/api/get_albums';
 
     this.state = {
       albums: [],

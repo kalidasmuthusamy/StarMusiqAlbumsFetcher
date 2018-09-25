@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import webpush from 'web-push';
-import moment from 'moment';
 import _ from 'lodash';
 
 import db from './db';
@@ -30,8 +29,9 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 
+  // For all GET requests except for internal API's (starts with /api/), handle with client files
   // Handle React routing, return all requests to React app
-  app.get('*', function (_req, res) {
+  app.get(/^((?!\/api\/).)*$/, function (_req, res) {
     res.sendFile(path.join(__dirname, '../client', 'index.html'));
   });
 } else {
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/get_albums', asyncMiddleware(async (req, res, _next) => {
+app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
   const albums = await Album.find().sort([['weightage', 'descending']]);
 
   res.json({
@@ -51,7 +51,7 @@ app.get('/get_albums', asyncMiddleware(async (req, res, _next) => {
   });
 }));
 
-app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
   const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   // get albums from page 1 to 10
   const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async (pageNumber) => {
@@ -98,7 +98,7 @@ app.post('/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
 }));
 
 
-app.post('/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
@@ -122,7 +122,7 @@ app.post('/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
   res.json({ refreshedAlbums: refreshedAlbums });
 }));
 
-app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
+app.post('/api/save_subscription', asyncMiddleware(async (req, res, _next) => {
   const reqSubscriptionObject = req.body;
 
   const createdSubscriptionObject = await Subscription.create({
@@ -137,7 +137,7 @@ app.post('/save_subscription', asyncMiddleware(async (req, res, _next) => {
   });
 }));
 
-app.post('/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
   webpush.setGCMAPIKey(process.env.GCM_API_KEY);
 
   webpush.setVapidDetails(
