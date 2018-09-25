@@ -52,7 +52,6 @@
     "lodash": "^4.17.4",
     "react": "16.4.2",
     "react-dom": "16.4.2",
-    "react-motion": "^0.5.2",
     "react-shortcuts": "^2.0.0"
   },
   "main": "server.js",
