@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Shortcuts } from 'react-shortcuts';
 import { toInteger, toArray, last, map, includes } from 'lodash';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 import AlbumsStorageManager from '../lib/AlbumsStorageManager';
 
-class AlbumsFetcher extends Component {
+class AlbumsFetcher extends PureComponent {
   constructor(props) {
     super(props);
 

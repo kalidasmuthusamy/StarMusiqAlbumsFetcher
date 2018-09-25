@@ -4,8 +4,8 @@ import { ShortcutManager } from 'react-shortcuts';
 import { StaggeredMotion, spring, presets } from 'react-motion';
 import { range } from 'lodash';
 
-import AlbumsFetcher from './containers/AlbumsFetcher';
 import Header from './components/Header';
+import AlbumsFetcher from './containers/AlbumsFetcher';
 
 import keymap from './lib/keymap';
 
