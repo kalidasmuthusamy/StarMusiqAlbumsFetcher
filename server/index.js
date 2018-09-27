@@ -160,7 +160,7 @@ app.post('/api/push_to_subscribers', apiAuthMiddleware, asyncMiddleware(async (_
     });
 
     await Album.findOneAndUpdate({ _id: latestUnpublishedAlbum['_id'] }, { published: true });
-    res.json({ status: "success", usersNotifiedCount: _.size(userSubscriptions) });
+    res.json({ status: "success", usersNotifiedCount: _.size(userSubscriptions), publishedAlbum: latestUnpublishedAlbum.albumName });
   } else {
     res.json({ status: "no-op", message: "No unpublished albums found"});
   }
