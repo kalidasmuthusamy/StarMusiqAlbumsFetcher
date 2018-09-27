@@ -11,6 +11,7 @@ import Album from './models/Album';
 import Subscription from './models/Subscription';
 
 import asyncMiddleware from './middlewares/asyncMiddleware';
+import apiAuthMiddleware from './middlewares/apiAuthMiddleware';
 
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
@@ -25,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN);
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Api-Secret-Token");
     next();
   });
 
@@ -37,12 +38,12 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   app.use((_req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Api-Secret-Token");
     next();
   });
 }
 
-app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
+app.get('/api/get_albums', apiAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   const albums = await Album.find().sort([['weightage', 'descending']]);
 
   res.json({
@@ -51,7 +52,7 @@ app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
   });
 }));
 
-app.post('/api/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/hydrate_albums', apiAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   const reversedPageNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
   // get albums from page 1 to 10
   const scrapedAlbumsCollection = await Promise.all(_.map(reversedPageNumbers, async (pageNumber) => {
@@ -98,7 +99,7 @@ app.post('/api/hydrate_albums', asyncMiddleware(async (_req, res, _next) => {
 }));
 
 
-app.post('/api/refresh_albums', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/refresh_albums', apiAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   const starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
   const latestAlbumsPageNumber = 1;
 
@@ -137,7 +138,7 @@ app.post('/api/save_subscription', asyncMiddleware(async (req, res, _next) => {
   });
 }));
 
-app.post('/api/push_to_subscribers', asyncMiddleware(async (_req, res, _next) => {
+app.post('/api/push_to_subscribers', apiAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
   webpush.setGCMAPIKey(process.env.GCM_API_KEY);
 
   webpush.setVapidDetails(
