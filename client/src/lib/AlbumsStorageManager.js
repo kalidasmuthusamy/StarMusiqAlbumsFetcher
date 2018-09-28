@@ -1,6 +1,6 @@
 import { isNil, isEmpty } from 'lodash';
 
-const ALBUM_IDENTIFIER_REF_KEY = 'albumIds';
+const ALBUM_IDENTIFIER_REF_KEY = 'albumMovieIds';
 
 class AlbumsStorageManager {
   static getVisitedAlbumIds = () => (

@@ -46,11 +46,11 @@ class AlbumsFetcher extends Component {
       const visitedAlbumIds = AlbumsStorageManager.getVisitedAlbumIds();
       highlightedAlbums = map(albums, (album) => ({
         ...album,
-        unvisited: !includes(visitedAlbumIds, album['id']),
+        unvisited: !includes(visitedAlbumIds, album['movieId']),
       }));
     }
 
-    AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'id'));
+    AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'movieId'));
     return highlightedAlbums;
   }
 
@@ -63,10 +63,10 @@ class AlbumsFetcher extends Component {
 
     if (responseObject.status === 'success') {
       const { albums } = responseObject;
-      // const highlightedAlbums = this.highlightNewAlbums(albums);
+      const highlightedAlbums = this.highlightNewAlbums(albums);
 
       this.setState({
-        albums: albums,
+        albums: highlightedAlbums,
         loading: false
       });
     } else {
