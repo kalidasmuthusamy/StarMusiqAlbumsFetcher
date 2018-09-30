@@ -123,10 +123,12 @@ class AlbumsFetcher extends Component {
   };
 
   handleSearchStringChange = (event) => {
-    const searchString = _.trim(event.target.value);
+    const userInputSearchString = _.trim(event.target.value);
+    const regexSafeSearchString = userInputSearchString.replace(/[^\w\s]/gi, '');
+
     this.setState({
       ...this.state,
-      searchString,
+      searchString: regexSafeSearchString,
     })
   }
 
