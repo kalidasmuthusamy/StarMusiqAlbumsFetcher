@@ -7,6 +7,8 @@ import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 import AlbumsStorageManager from '../lib/AlbumsStorageManager';
 
+import albumsFilter from '../lib/albumsFilter';
+
 class AlbumsFetcher extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +29,8 @@ class AlbumsFetcher extends Component {
     this.state = {
       albums: [],
       loading: false,
-      loadingError: false
+      loadingError: false,
+      searchString: '',
     };
   }
 
@@ -118,6 +121,9 @@ class AlbumsFetcher extends Component {
   };
 
   render() {
+    const { searchString, albums } = this.state;
+    const filteredAlbums = _.isEmpty(searchString) ? albums : albumsFilter({ searchString, albumsPayload: albums });
+
     return (
       <Shortcuts
         name="ALBUMS_CONTAINER"
@@ -126,6 +132,7 @@ class AlbumsFetcher extends Component {
       >
         <AlbumCardsContainer
           {...this.state}
+          albums={filteredAlbums}
           loadingErrorMessage={this.loadingErrorMessage}
           streamButtonRef={el => this.streamButtonRef.push(el)}
           individualSongsButtonRef={el =>
