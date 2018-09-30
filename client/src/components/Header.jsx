@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Header = ({ title, onSearchStringChange }) => (
-  <nav className="navbar sticky-top navbar-expand-lg navbar-dark bg-primary app-header">
+  <nav className="sticky-top navbar navbar-expand-lg navbar-dark bg-primary header-nav app-header">
     <a className="navbar-brand header-text" href="#">{title}</a>
     <button
       className="navbar-toggler"
@@ -17,9 +17,16 @@ const Header = ({ title, onSearchStringChange }) => (
     </button>
 
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      <div className="md-form">
-        <input type="text" id="form1" className="form-control" onChange={(event) => onSearchStringChange(event)} />
-        <label htmlFor="form1" >Search - Album, Composer, Actors</label>
+      <div className="md-form ml-auto">
+        <input
+          placeholder="Search - Album, Composer, Casts"
+          type="text"
+          id="inputPlaceholderEx"
+          className="searchBox"
+          onChange={
+            (event) => onSearchStringChange(event)
+          }
+        />
       </div>
     </div>
   </nav>

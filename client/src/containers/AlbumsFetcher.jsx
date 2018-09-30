@@ -123,7 +123,7 @@ class AlbumsFetcher extends Component {
   };
 
   handleSearchStringChange = (event) => {
-    const searchString = event.target.value;
+    const searchString = _.trim(event.target.value);
     this.setState({
       ...this.state,
       searchString,
