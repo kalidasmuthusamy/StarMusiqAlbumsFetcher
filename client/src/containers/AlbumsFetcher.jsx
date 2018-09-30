@@ -32,11 +32,7 @@ class AlbumsFetcher extends Component {
   }
 
   fetchAlbums = async () => {
-    const response = await axios.get(this.getAlbumsEndpoint, {
-      headers: {
-        'api-secret-token': process.env.API_SECRET_TOKEN,
-      },
-    });
+    const response = await axios.get(this.getAlbumsEndpoint);
     return response.data;
   };
 

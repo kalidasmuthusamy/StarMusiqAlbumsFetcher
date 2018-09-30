@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/api/get_albums', apiAuthMiddleware, asyncMiddleware(async (_req, res, _next) => {
+app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
   const albums = await Album.find().sort([['weightage', 'descending']]);
 
   res.json({
