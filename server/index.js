@@ -111,9 +111,14 @@ app.post('/api/refresh_albums', apiAuthMiddleware, asyncMiddleware(async (_req, 
 
   const newestScrapedAlbums = _.reverse(scrapedAlbums);
   const refreshedAlbums = await Promise.all(_.map(newestScrapedAlbums, async (scrapedAlbum, scrapedAlbumIdx) => {
+    const existingAlbum = await Album.findOne({ movieId: scrapedAlbum.movieId });
+    const existingAlbumPublishedStatus = _.get(existingAlbum || {}, 'published', false);
+
     await Album.findOneAndDelete({ movieId: scrapedAlbum.movieId });
+
     const refreshedAlbum = await Album.create({
       ...scrapedAlbum,
+      published: !!existingAlbumPublishedStatus,
       weightage: (highestPersistedWeightage + scrapedAlbumIdx + 1),
     });
 
