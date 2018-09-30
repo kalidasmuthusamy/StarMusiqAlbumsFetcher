@@ -68,10 +68,38 @@ p.card-title {
   margin-bottom: 0rem !important;
 }
 
-nav.app-header {
+nav.app-header.header-nav {
   justify-content: center;
+
+  .header-text {
+    font-weight: bolder;
+  }
+
+  .md-form {
+    margin-bottom: 0px !important;
+
+    label {
+      color: white;
+      font-weight: 300;
+    }
+
+    .searchBox {
+      color: white;
+      text-align: center;
+    }
+
+    .searchBox::placeholder {
+      color: white;
+    }
+  }
 }
 
-.header-text {
-  font-weight: bolder;
+@media (min-width: 768px) {
+  nav.app-header.header-nav {
+    .md-form {
+      margin-bottom: 0px !important;
+
+      width: 250px;
+    }
+  }
 }
