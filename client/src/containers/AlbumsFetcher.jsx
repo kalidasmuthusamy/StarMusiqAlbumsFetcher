@@ -6,6 +6,8 @@ import axios from 'axios';
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
 import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 import AlbumsStorageManager from '../lib/AlbumsStorageManager';
+import Header from '../components/Header';
+
 
 import albumsFilter from '../lib/albumsFilter';
 
@@ -120,6 +122,14 @@ class AlbumsFetcher extends Component {
     this.displayAlbumsOfPage();
   };
 
+  handleSearchStringChange = (event) => {
+    const searchString = event.target.value;
+    this.setState({
+      ...this.state,
+      searchString,
+    })
+  }
+
   render() {
     const { searchString, albums } = this.state;
     const filteredAlbums = _.isEmpty(searchString) ? albums : albumsFilter({ searchString, albumsPayload: albums });
@@ -130,6 +140,9 @@ class AlbumsFetcher extends Component {
         handler={this._handleShortcuts}
         targetNodeSelector={'body'}
       >
+        <Header
+          onSearchStringChange={this.handleSearchStringChange}
+        />
         <AlbumCardsContainer
           {...this.state}
           albums={filteredAlbums}

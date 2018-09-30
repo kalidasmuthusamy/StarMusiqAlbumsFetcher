@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { ShortcutManager } from 'react-shortcuts';
 
 import AlbumsFetcher from './containers/AlbumsFetcher';
-import Header from './components/Header';
 
 import keymap from './lib/keymap';
 
@@ -20,7 +19,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header/>
         <AlbumsFetcher />
       </div>
     );
