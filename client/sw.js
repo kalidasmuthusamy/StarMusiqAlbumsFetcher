@@ -1,6 +1,9 @@
 self.addEventListener('install', function (_event) {
-  // TODO: Callbacks after service worker installed
+});
 
+initializeWorkbox();
+
+function initializeWorkbox() {
   importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js');
 
   if (workbox) {
@@ -112,7 +115,7 @@ self.addEventListener('install', function (_event) {
   } else {
     console.log('Boo! Workbox didn\'t load 😬');
   }
-});
+}
 
 self.addEventListener('fetch', (event) => {
   if (router) {
