@@ -24,12 +24,12 @@ Raven.config('https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762').insta
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762' });
 
-if (process.env.NODE_ENV === 'production') {
-  // The request handler must be the first middleware on the app
-  app.use(Sentry.Handlers.requestHandler());
-  // The error handler must be before any other error middleware
-  app.use(Sentry.Handlers.errorHandler());
+// The request handler must be the first middleware on the app
+app.use(Sentry.Handlers.requestHandler());
+// The error handler must be before any other error middleware
+app.use(Sentry.Handlers.errorHandler());
 
+if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, '../client')));
 
@@ -194,18 +194,12 @@ app.listen(port, () => {
 // see - https://nodejs.org/api/process.html#process_event_uncaughtexception
 process.on('uncaughtException', err => {
   console.error('uncaught exception:', err);
-
-  if (process.env.NODE_ENV === 'production') {
-    Raven.captureException(err);
-  }
+  Raven.captureException(err);
 });
 // handle all unhandled promise rejections
 // see - http://bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events
 // or for latest node - https://nodejs.org/api/process.html#process_event_unhandledrejection
 process.on('unhandledRejection', error => {
   console.error('unhandled rejection:', error);
-
-  if (process.env.NODE_ENV === 'production') {
-    Raven.captureException(error);
-  }
+  Raven.captureException(error);
 });
