@@ -15,12 +15,21 @@ import apiAuthMiddleware from './middlewares/apiAuthMiddleware';
 
 import StarMusiqAlbumsFetcher from '../client/src/lib/CORSEnabledStarMusiqAlbumFetcher';
 
-
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(bodyParser.json());
+
+const Raven = require('raven');
+Raven.config('https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762').install();
+
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762' });
 
 if (process.env.NODE_ENV === 'production') {
+  // The request handler must be the first middleware on the app
+  app.use(Sentry.Handlers.requestHandler());
+  // The error handler must be before any other error middleware
+  app.use(Sentry.Handlers.errorHandler());
+
   // Serve any static files
   app.use(express.static(path.join(__dirname, '../client')));
 
@@ -42,6 +51,8 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 }
+
+app.use(bodyParser.json());
 
 app.get('/api/get_albums', asyncMiddleware(async (_req, res, _next) => {
   const albums = await Album.find().sort([['weightage', 'descending']]);
@@ -181,8 +192,20 @@ app.listen(port, () => {
 
 // handle all uncaught exceptions
 // see - https://nodejs.org/api/process.html#process_event_uncaughtexception
-process.on('uncaughtException', err => console.error('uncaught exception:', err));
+process.on('uncaughtException', err => {
+  console.error('uncaught exception:', err);
+
+  if (process.env.NODE_ENV === 'production') {
+    Raven.captureException(err);
+  }
+});
 // handle all unhandled promise rejections
 // see - http://bluebirdjs.com/docs/api/error-management-configuration.html#global-rejection-events
 // or for latest node - https://nodejs.org/api/process.html#process_event_unhandledrejection
-process.on('unhandledRejection', error => console.error('unhandled rejection:', error));
+process.on('unhandledRejection', error => {
+  console.error('unhandled rejection:', error);
+
+  if (process.env.NODE_ENV === 'production') {
+    Raven.captureException(error);
+  }
+});

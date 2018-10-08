@@ -13,6 +13,7 @@
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
+    "@sentry/node": "^4.0.6",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.0",
     "babel-polyfill": "^6.26.0",
@@ -27,6 +28,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "mongoose": "^5.2.10",
+    "raven": "^2.6.4",
     "web-push": "^3.3.2"
   },
   "devDependencies": {
