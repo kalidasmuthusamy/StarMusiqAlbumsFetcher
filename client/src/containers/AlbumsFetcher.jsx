@@ -8,12 +8,15 @@ import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 import AlbumsStorageManager from '../lib/AlbumsStorageManager';
 import Header from '../components/Header';
 
-
 import albumsFilter from '../lib/albumsFilter';
+
+import * as Sentry from '@sentry/browser';
 
 class AlbumsFetcher extends Component {
   constructor(props) {
     super(props);
+
+    Sentry.init({ dsn: 'https://4b2c2e33e6a84b98960862f89d996947@sentry.io/1296781' });
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.loadingErrorMessage = "Error! Please Try Again";
@@ -72,6 +75,7 @@ class AlbumsFetcher extends Component {
       });
     } else {
       console.log(responseObject.errorMessage);
+      Sentry.captureException(responseObject);
 
       this.setState(prevState => {
         return {
