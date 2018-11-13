@@ -19,10 +19,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const Raven = require('raven');
-Raven.config('https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762').install();
+Raven.config(process.env.SENTRY_SERVER_DSN).install();
 
 const Sentry = require('@sentry/node');
-Sentry.init({ dsn: 'https://accf8e03679e4ddd8b5bb9338bd4786c@sentry.io/1296762' });
+Sentry.init({ dsn: process.env.SENTRY_SERVER_DSN });
 
 // The request handler must be the first middleware on the app
 app.use(Sentry.Handlers.requestHandler());

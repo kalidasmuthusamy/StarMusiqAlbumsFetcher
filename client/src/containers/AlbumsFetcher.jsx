@@ -16,7 +16,7 @@ class AlbumsFetcher extends Component {
   constructor(props) {
     super(props);
 
-    Sentry.init({ dsn: 'https://4b2c2e33e6a84b98960862f89d996947@sentry.io/1296781' });
+    Sentry.init({ dsn: process.env.SENTRY_CLIENT_DSN });
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.loadingErrorMessage = "Error! Please Try Again";
