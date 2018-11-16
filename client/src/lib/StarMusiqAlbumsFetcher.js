@@ -7,7 +7,7 @@ class StarMusiqAlbumsFetcher {
   constructor(){
     this.siteConfig = {
       albumBaseUrl: 'https://www.sunmusiq.com',
-      downloadBaseUrl: 'http://www.starfile.info/download-7s-zip-new/download-3.ashx?Token=',
+      downloadBaseUrl: 'http://www.starfile.fun/download-7s-zip-new/download-3.ashx?Token=',
       landingUrl: 'https://www.sunmusiq.com?pgNo=',
       streamBaseUrl: 'https://www.sunmusiq.com/audio-player-popup.asp?MovieID='
     };
