@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import posed, { PoseGroup } from 'react-pose';
 
-// import Button from './Buttons/';
 import AlbumCard from './AlbumCard/';
 import Spinner from './Spinner';
 import ErrorModal from './ErrorModal';
@@ -38,28 +37,6 @@ const AlbumCardsContainer = (props) => {
           }
         </PoseGroup>
       </div>
-      {/*
-        <div className='row justify-content-center'>
-          <div className='col-6'>
-            <Button
-              className={'btn-primary nav-button waves-effect float-right'}
-              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber - 1))}
-              value='Prev'
-              disabled={props.loading || (props.currentPageNumber == 1)}
-              buttonRef={props.prevButtonRef}
-            />
-          </div>
-          <div className='col-6'>
-            <Button
-              className={'btn-primary nav-button waves-effect float-left'}
-              onClick={() => (props.displayAlbumsOfPage(props.currentPageNumber + 1))}
-              value='Next'
-              disabled={props.loading || (props.currentPageNumber === props.topAlbumsPageLimit)}
-              buttonRef={props.nextButtonRef}
-            />
-          </div>
-        </div>
-      */}
     </div>
   );
 
