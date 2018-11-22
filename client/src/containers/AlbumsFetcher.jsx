@@ -127,7 +127,7 @@ class AlbumsFetcher extends Component {
       return;
     }
 
-    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+    if ((window.innerHeight + document.documentElement.scrollTop + 300) >= document.documentElement.offsetHeight) {
       this.setState(({currPage}) => ({
         currPage: currPage + 1,
         loading: true,
