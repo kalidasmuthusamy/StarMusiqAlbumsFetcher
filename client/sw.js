@@ -113,7 +113,7 @@ function initializeWorkbox() {
 
     router.registerRoute(
       new workbox.routing.RegExpRoute(
-        new RegExp('*/movieimages/*'),
+        new RegExp('movieimages/*'),
         albumImagesStrategy
       )
     );

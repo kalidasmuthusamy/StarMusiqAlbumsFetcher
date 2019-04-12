@@ -4,32 +4,50 @@ import cheerio from 'cheerio';
 import btoa from 'btoa';
 
 class StarMusiqAlbumsFetcher {
-  constructor(){
+  constructor() {
     this.siteConfig = {
-      albumBaseUrl: 'https://www.sunmusiq.com',
-      downloadBaseUrl: 'http://www.starfile.fun/download-7s-zip-new/download-3.ashx?Token=',
-      landingUrl: 'https://www.sunmusiq.com?pgNo=',
-      streamBaseUrl: 'https://www.sunmusiq.com/audio-player-popup.asp?MovieID='
+      albumBaseUrl: `${process.env.STARMUSIQ_BASE_URL}`,
+      downloadBaseUrl:
+        'http://www.starfile.fun/download-7s-zip-new/download-3.ashx?Token=',
+      landingUrl: `${process.env.STARMUSIQ_BASE_URL}?pgNo=`,
+      streamBaseUrl: `${
+        process.env.STARMUSIQ_BASE_URL
+      }/audio-player-popup.asp?MovieID=`
     };
     this.albums = [];
   }
 
-  getDownloadLink(movieId, quality){
+  getDownloadLink(movieId, quality) {
     function getDateTimeString() {
       const isoDateTimeString = new Date().toISOString();
       const date = isoDateTimeString.slice(0, isoDateTimeString.indexOf('T'));
-      const utcTime = isoDateTimeString.slice((isoDateTimeString.indexOf('T') + 1), (isoDateTimeString.indexOf('T') + 9));
-      return (date + ' ' + utcTime);
+      const utcTime = isoDateTimeString.slice(
+        isoDateTimeString.indexOf('T') + 1,
+        isoDateTimeString.indexOf('T') + 9
+      );
+      return date + ' ' + utcTime;
     }
 
     // Function to generate token for album download
     function getAlbumDownloadToken(movieId, dateTimeString, quality) {
       const movieType = quality === 'normal' ? 'Type2' : 'Type1';
-      const tokenData = 'Movie' + '$$' + movieId + '$$' + movieType + '$$' + 'OpenDownload' + '$$' + dateTimeString;
+      const tokenData =
+        'Movie' +
+        '$$' +
+        movieId +
+        '$$' +
+        movieType +
+        '$$' +
+        'OpenDownload' +
+        '$$' +
+        dateTimeString;
       return btoa(tokenData);
     }
 
-    return (this.siteConfig.downloadBaseUrl + getAlbumDownloadToken(movieId, getDateTimeString(), quality));
+    return (
+      this.siteConfig.downloadBaseUrl +
+      getAlbumDownloadToken(movieId, getDateTimeString(), quality)
+    );
   }
 
   buildAlbumObjects(responseText) {
@@ -37,24 +55,33 @@ class StarMusiqAlbumsFetcher {
     this.albums = [];
 
     const $ = cheerio.load(responseText);
-    const $albumsTable = $(responseText).find('#featured_albums').find('.row');
+    const $albumsTable = $(responseText)
+      .find('#featured_albums')
+      .find('.row');
 
-    forEach($albumsTable, (albumRow) => {
+    forEach($albumsTable, albumRow => {
       const rowAlbums = $(albumRow).children();
 
-      forEach(rowAlbums, (singleAlbum) => {
+      forEach(rowAlbums, singleAlbum => {
         const $albumBlock = $(singleAlbum);
-        const $linkSection = $albumBlock.find('.img-thumbnail').find('a').first();
+        const $linkSection = $albumBlock
+          .find('.img-thumbnail')
+          .find('a')
+          .first();
         const $albumInfoSection = $albumBlock.find('.clearfix.text-nowrap');
 
         const albumHref = $linkSection.attr('href');
         const movieIconUrl = $linkSection.find('img').attr('src');
-        const [albumName, musicDirector] = split($albumInfoSection.find('h5').find('a').attr('title'), ' - ');
-        const casts = $albumInfoSection.find('div:nth-child(3) > span').attr('title') || '';
-        const movieId = nth(
-          split(albumHref, '-'),
-          -3
+        const [albumName, musicDirector] = split(
+          $albumInfoSection
+            .find('h5')
+            .find('a')
+            .attr('title'),
+          ' - '
         );
+        const casts =
+          $albumInfoSection.find('div:nth-child(3) > span').attr('title') || '';
+        const movieId = nth(split(albumHref, '-'), -3);
 
         const albumObj = {
           albumName,
@@ -64,11 +91,11 @@ class StarMusiqAlbumsFetcher {
           movieUrl: `${this.siteConfig.albumBaseUrl}${albumHref}`,
           movieIconUrl: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
           streamingUrl: `${this.siteConfig.streamBaseUrl}${movieId}`,
-          downloadLinkNormal: (this.getDownloadLink(movieId, 'normal')),
-          downloadLinkHq: (this.getDownloadLink(movieId, 'hq'))
-        }
+          downloadLinkNormal: this.getDownloadLink(movieId, 'normal'),
+          downloadLinkHq: this.getDownloadLink(movieId, 'hq')
+        };
 
-        if(movieId){
+        if (movieId) {
           this.albums.push(albumObj);
         }
       });
@@ -80,7 +107,7 @@ class StarMusiqAlbumsFetcher {
   // Return a promise to handle data
   // Asynchronously during DOM updation
   async fetchAlbums(pageNo) {
-    const pageNumber = (pageNo == undefined) ? 1 : pageNo;
+    const pageNumber = pageNo == undefined ? 1 : pageNo;
     const albumsURL = this.siteConfig.landingUrl + pageNumber;
     const thisContext = this;
 
@@ -88,25 +115,28 @@ class StarMusiqAlbumsFetcher {
       const response = await axios.get(albumsURL, {
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          ...((typeof(window) === 'undefined' || process.env.NODE_ENV !== 'development') && { origin: 'https://new-tamil-albums.herokuapp.com' })
-        },
+          ...((typeof window === 'undefined' ||
+            process.env.NODE_ENV !== 'development') && {
+            origin: 'https://new-tamil-albums.herokuapp.com'
+          })
+        }
       });
       await thisContext.buildAlbumObjects(response.data);
 
       const albumsCollection = {
         status: 'success',
-        albums: thisContext.albums,
-      }
+        albums: thisContext.albums
+      };
       return albumsCollection;
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       const errorObject = {
         status: 'failure',
-        errorMessage: `${e}`,
-      }
+        errorMessage: `${e}`
+      };
 
       return errorObject;
-    };
+    }
   }
 }
 
