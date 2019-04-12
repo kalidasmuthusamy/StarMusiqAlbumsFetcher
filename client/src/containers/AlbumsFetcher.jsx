@@ -20,7 +20,7 @@ class AlbumsFetcher extends Component {
 
     this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.albumsPerPage = process.env.ALBUMS_PER_PAGE || 12;
-    this.loadingErrorMessage = "Error! Please Try Again";
+    this.loadingErrorMessage = 'Error! Please Try Again';
 
     this.prevButtonRef = null;
     this.nextButtonRef = null;
@@ -30,7 +30,8 @@ class AlbumsFetcher extends Component {
     this.normalDownloadButtonRef = [];
     this.hqDownloadButtonRef = [];
 
-    this.getAlbumsEndpoint = (process.env.BACKEND_API_BASE_URL) + '/api/get_albums';
+    this.getAlbumsEndpoint =
+      process.env.BACKEND_API_BASE_URL + '/api/get_albums';
 
     this.state = {
       albums: [],
@@ -39,7 +40,7 @@ class AlbumsFetcher extends Component {
       loadingError: false,
       searchString: '',
       currPage: 1,
-      reachedEnd: false,
+      reachedEnd: false
     };
   }
 
@@ -52,19 +53,19 @@ class AlbumsFetcher extends Component {
     let highlightedAlbums = albums;
     if (AlbumsStorageManager.isVisitedAlbumsPresent()) {
       const visitedAlbumIds = AlbumsStorageManager.getVisitedAlbumIds();
-      highlightedAlbums = map(albums, (album) => ({
+      highlightedAlbums = map(albums, album => ({
         ...album,
-        unvisited: !includes(visitedAlbumIds, album['movieId']),
+        unvisited: !includes(visitedAlbumIds, album['movieId'])
       }));
     }
 
     AlbumsStorageManager.setVisitedAlbumIds(map(albums, 'movieId'));
     return highlightedAlbums;
-  }
+  };
 
   handleFetchAlbums = async () => {
     this.setState({
-      loading: true,
+      loading: true
     });
 
     const responseObject = await this.fetchAlbums();
@@ -90,19 +91,19 @@ class AlbumsFetcher extends Component {
     }
   };
 
-  extractAlbums = (pageNumber) => {
+  extractAlbums = pageNumber => {
     const { albums: fetchedAlbums } = this.state;
     const { albumsPerPage } = this;
 
-    return _.slice(fetchedAlbums, 0, (pageNumber * albumsPerPage));
-  }
+    return _.slice(fetchedAlbums, 0, pageNumber * albumsPerPage);
+  };
 
   componentDidMount = async () => {
     await this.handleFetchAlbums();
     const extractedAlbums = this.extractAlbums(this.state.currPage);
 
     this.setState({
-      extractedAlbums,
+      extractedAlbums
     });
 
     window.addEventListener('scroll', this.handleScroll, false);
@@ -110,10 +111,16 @@ class AlbumsFetcher extends Component {
 
   componentWillUnmount = () => {
     window.removeEventListener('scroll', this.handleScroll, false);
-  }
+  };
 
   handleScroll = () => {
-    const { loading, loadingError, currPage, albums: fetchedAlbums, reachedEnd } = this.state;
+    const {
+      loading,
+      loadingError,
+      currPage,
+      albums: fetchedAlbums,
+      reachedEnd
+    } = this.state;
 
     if (loading || loadingError || reachedEnd) {
       return;
@@ -121,50 +128,57 @@ class AlbumsFetcher extends Component {
 
     if (this.extractAlbums(currPage).length === fetchedAlbums.length) {
       this.setState({
-        reachedEnd: true,
+        reachedEnd: true
       });
 
       return;
     }
 
-    if ((window.innerHeight + document.documentElement.scrollTop + 300) >= document.documentElement.offsetHeight) {
-      this.setState(({currPage}) => ({
-        currPage: currPage + 1,
-        loading: true,
-      }), () => {
-        const extractedAlbums = this.extractAlbums(this.state.currPage);
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 300 >=
+      document.documentElement.offsetHeight
+    ) {
+      this.setState(
+        ({ currPage }) => ({
+          currPage: currPage + 1,
+          loading: true
+        }),
+        () => {
+          const extractedAlbums = this.extractAlbums(this.state.currPage);
 
-        this.setState({
-          loading: false,
-          extractedAlbums,
-        });
-      });
+          this.setState({
+            loading: false,
+            extractedAlbums
+          });
+        }
+      );
     }
-  }
+  };
 
-  handleSearchStringChange = (event) => {
+  handleSearchStringChange = event => {
     const userInputSearchString = _.trim(event.target.value);
-    const regexSafeSearchString = userInputSearchString.replace(/[^\w\s]/gi, '');
+    const regexSafeSearchString = userInputSearchString.replace(
+      /[^\w\s]/gi,
+      ''
+    );
 
-    _.debounce(
-      () => {
-        this.setState({
-          ...this.state,
-          searchString: regexSafeSearchString,
-        });
-      }, 500
-    )();
-  }
+    _.debounce(() => {
+      this.setState({
+        ...this.state,
+        searchString: regexSafeSearchString
+      });
+    }, 500)();
+  };
 
   render() {
     const { searchString, albums, extractedAlbums, reachedEnd } = this.state;
-    const filteredAlbums = _.isEmpty(searchString) ? extractedAlbums : albumsFilter({ searchString, albumsPayload: albums });
+    const filteredAlbums = _.isEmpty(searchString)
+      ? extractedAlbums
+      : albumsFilter({ searchString, albumsPayload: albums });
 
     return (
       <React.Fragment>
-        <Header
-          onSearchStringChange={this.handleSearchStringChange}
-        />
+        <Header onSearchStringChange={this.handleSearchStringChange} />
         <AlbumCardsContainer
           {...this.state}
           albums={filteredAlbums}
@@ -176,9 +190,7 @@ class AlbumsFetcher extends Component {
           normalDownloadButtonRef={el => this.normalDownloadButtonRef.push(el)}
           hqDownloadButtonRef={el => this.hqDownloadButtonRef.push(el)}
         />
-        {
-          reachedEnd && isEmpty(searchString) && <EndCard />
-        }
+        {reachedEnd && isEmpty(searchString) && <EndCard />}
       </React.Fragment>
     );
   }
