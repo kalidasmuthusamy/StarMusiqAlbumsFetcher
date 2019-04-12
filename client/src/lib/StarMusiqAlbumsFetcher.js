@@ -6,7 +6,6 @@ import btoa from 'btoa';
 class StarMusiqAlbumsFetcher {
   constructor() {
     this.siteConfig = {
-      albumBaseUrl: `${process.env.STARMUSIQ_BASE_URL}`,
       downloadBaseUrl:
         'http://www.starfile.fun/download-7s-zip-new/download-3.ashx?Token=',
       landingUrl: `${process.env.STARMUSIQ_BASE_URL}?pgNo=`,
@@ -15,6 +14,10 @@ class StarMusiqAlbumsFetcher {
       }/audio-player-popup.asp?MovieID=`
     };
     this.albums = [];
+  }
+
+  getStreamingLink(movieId) {
+    return `${this.siteConfig.streamBaseUrl}${movieId}`;
   }
 
   getDownloadLink(movieId, quality) {
@@ -88,9 +91,9 @@ class StarMusiqAlbumsFetcher {
           musicDirector,
           casts,
           movieId,
-          movieUrl: `${this.siteConfig.albumBaseUrl}${albumHref}`,
-          movieIconUrl: `${this.siteConfig.albumBaseUrl}${movieIconUrl}`,
-          streamingUrl: `${this.siteConfig.streamBaseUrl}${movieId}`,
+          movieIconUrl,
+          movieUrl: albumHref,
+          streamingUrl: this.getStreamingLink(movieId),
           downloadLinkNormal: this.getDownloadLink(movieId, 'normal'),
           downloadLinkHq: this.getDownloadLink(movieId, 'hq')
         };

@@ -32,11 +32,6 @@ const albumSchema = new Schema(
       required: true,
       get: v => `${process.env.STARMUSIQ_BASE_URL}${v}`
     },
-    streamingUrl: {
-      type: String,
-      required: true,
-      get: v => `${process.env.STARMUSIQ_BASE_URL}${v}`
-    },
     createdAt: {
       type: Date,
       default: Date.now()
@@ -69,6 +64,10 @@ albumSchema.virtual("downloadLinkNormal").get(function() {
 
 albumSchema.virtual("downloadLinkHq").get(function() {
   return starMusiqAlbumsFetcher.getDownloadLink(this.movieId, "hq");
+});
+
+albumSchema.virtual("streamingUrl").get(function() {
+  return starMusiqAlbumsFetcher.getStreamingLink(this.movieId);
 });
 
 const AlbumModel = mongoose.model("Album", albumSchema);

@@ -3,7 +3,6 @@ import { isEmpty, map, includes } from 'lodash';
 import axios from 'axios';
 
 import AlbumCardsContainer from '../components/AlbumCardsContainer';
-import StarMusiqAlbumsFetcher from '../lib/CORSEnabledStarMusiqAlbumFetcher';
 import AlbumsStorageManager from '../lib/AlbumsStorageManager';
 import Header from '../components/Header';
 import EndCard from '../components/EndCard';
@@ -18,7 +17,6 @@ class AlbumsFetcher extends Component {
 
     Sentry.init({ dsn: process.env.SENTRY_CLIENT_DSN });
 
-    this.starMusiqAlbumsRetriever = new StarMusiqAlbumsFetcher();
     this.albumsPerPage = process.env.ALBUMS_PER_PAGE || 12;
     this.loadingErrorMessage = 'Error! Please Try Again';
 
