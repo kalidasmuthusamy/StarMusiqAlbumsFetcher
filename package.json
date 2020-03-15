@@ -27,7 +27,7 @@
     "express": "^4.16.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
-    "mongoose": "^5.2.10",
+    "mongoose": "^5.7.5",
     "raven": "^2.6.4",
     "web-push": "^3.3.2"
   },
