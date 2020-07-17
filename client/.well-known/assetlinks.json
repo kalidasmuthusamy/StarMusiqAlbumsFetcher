@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.herokuapp.new_tamil_albums.twa",
+      "sha256_cert_fingerprints": [
+        "F5:76:95:14:57:98:68:B5:62:05:64:17:B4:CF:9F:70:8C:2E:81:54:06:22:B7:4A:79:61:59:82:C1:94:E9:DC"
+      ]
+    }
+  }
+]
